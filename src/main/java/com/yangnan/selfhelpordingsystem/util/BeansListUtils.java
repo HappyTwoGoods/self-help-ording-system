@@ -10,10 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * @author liuwen
- * @date 2018/11/3
- */
 public class BeansListUtils {
 
     /**
