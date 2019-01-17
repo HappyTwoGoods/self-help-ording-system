@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yangnan.selfhelpordingsystem.dao.ManagerDao">
+    <resultMap id="manager" type="com.yangnan.selfhelpordingsystem.entity.ManagerEntity">
+        <result column="id" property="id"></result>
+        <result column="manager_name" property="name"></result>
+        <result column="id_card" property="idCard"></result>
+        <result column="telephone" property="telephone"></result>
+        <result column="user_name" property="userName"></result>
+        <result column="manage_password" property="password"></result>
+        <result column="add_time" property="addTime"></result>
+        <result column="update_time" property="updateTime"></result>
+    </resultMap>
+    <insert id="insertManager" parameterType="com.yangnan.selfhelpordingsystem.entity.ManagerEntity">
+      insert into managers
+      (manager_name,id_card,telephone,user_name,manage_password,add_time,update_time)
+      values
+      (#{manager.name},#{manager.idCard},#{manager.telephone},#{manager.userName},#{manager.password},now(),now())
+    </insert>
+</mapper>
