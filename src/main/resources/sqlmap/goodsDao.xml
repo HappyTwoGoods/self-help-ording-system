@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yangnan.selfhelpordingsystem.dao.GoodsDao">
+    <resultMap id="Goods" type="com.yangnan.selfhelpordingsystem.entity.GoodsEntity">
+        <result column="id" property="id"></result>
+        <result column="goods_name" property="name"></result>
+        <result column="goods_type" property="type"></result>
+        <result column="cook_id" property="cookId"></result>
+        <result column="price" property="price"></result>
+        <result column="discount" property="discount"></result>
+        <result column="goods_limit" property="limit"></result>
+        <result column="image" property="image"></result>
+        <result column="goods_num" property="goodsNum"></result>
+        <result column="goods_describe" property="describe"></result>
+        <result column="add_time" property="addTime"></result>
+        <result column="update_time" property="updateTime"></result>
+    </resultMap>
+</mapper>
