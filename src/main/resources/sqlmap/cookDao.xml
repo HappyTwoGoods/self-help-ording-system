@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yangnan.selfhelpordingsystem.dao.CookDao">
-    <resultMap id="Cook" type="com.yangnan.selfhelpordingsystem.entity.CookEntity">
+    <resultMap id="CookInfoMap" type="com.yangnan.selfhelpordingsystem.entity.CookEntity">
         <result column="id" property="id"></result>
         <result column="cook_name" property="name"></result>
         <result column="telephone" property="telephone"></result>
@@ -9,4 +9,65 @@
         <result column="add_time" property="addTime"></result>
         <result column="update_time" property="updateTime"></result>
     </resultMap>
+
+    <sql id="cookInfo">
+        id,
+        cook_name,
+        telephone,
+        cook_status,
+        add_time,
+        update_time
+    </sql>
+
+    <insert id="insertCooker" parameterType="map">
+        INSERT INTO
+        cook(cook_name, telephone, cook_status, add_time, update_time) INSERT
+        VALUES {
+        #{cookName},
+        #{telephone},
+        #{cookStatus},
+        NOW(),
+        NOW()
+        }
+    </insert>
+
+    <delete id="deleteCooker" parameterType="java.lang.Integer">
+        DELETE FROM cook
+        WHERE
+        id = #{cookId }
+    </delete>
+
+    <update id="updateCookInfo" parameterType="map">
+        UPDATE cook
+        <set>
+            <if test="cookInfo.cookName != null">
+                cook_name = #{cookInfo.cookName},
+            </if>
+            <if test="cookInfo.telephone != null">
+                telephone = #{cookInfo.telephone},
+            </if>
+            <if test="cookInfo.cookStatus != null">
+                cook_status = #{cookInfo.cookStatus},
+            </if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{cookId}
+    </update>
+
+    <select id="queryCookInfo" parameterType="map" resultMap="CookInfoMap">
+        SELECT
+        <include refid="cookInfo"/>
+        FROM cook
+        WHERE
+        1=1
+        <if test="cookName != null">
+            AND cook_name = #{cookName}
+        </if>
+        <if test="telephone != null">
+            AND telephone = #{telephone}
+        </if>
+        <if test="cookStatus != null">
+            AND cook_status = #{cookStatus}
+        </if>
+    </select>
 </mapper>
