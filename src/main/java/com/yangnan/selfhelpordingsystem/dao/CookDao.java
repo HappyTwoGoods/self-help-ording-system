@@ -13,7 +13,7 @@ public interface CookDao {
      * @param cookInfo
      * @return
      */
-    int insertCooker(@Param("cookInfo")CookEntity cookInfo);
+    int insertCooker(@Param("cookInfo") CookEntity cookInfo);
 
     /**
      * 删除厨师信息
@@ -21,21 +21,15 @@ public interface CookDao {
      * @param cookId
      * @return
      */
-    int deleteCooker(@Param("cookId")Integer cookId);
+    int deleteCooker(@Param("cookId") Integer cookId);
 
     /**
      * 根据cookId动态修改厨师信息
      *
-     * @param cookName
-     * @param telephone
-     * @param cookStatus
-     * @param cookId
+     * @param cookInfo
      * @return
      */
-    CookEntity updateCookInfo(@Param("cookName")String cookName,
-                              @Param("telephone") String telephone,
-                              @Param("cookStaues") Integer cookStatus,
-                              @Param("cookId") Integer cookId);
+    int updateCookInfo(@Param("cookInfo") CookEntity cookInfo);
 
     /**
      * 动态查询厨师信息
@@ -45,7 +39,7 @@ public interface CookDao {
      * @param cookStatus
      * @return
      */
-    List<CookEntity> queryCookInfo(@Param("cookName")String cookName,
+    List<CookEntity> queryCookInfo(@Param("cookName") String cookName,
                                    @Param("telephone") String telephone,
-                                   @Param("cookStaues") Integer cookStatus);
+                                   @Param("cookStatus") Integer cookStatus);
 }

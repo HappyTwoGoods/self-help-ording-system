@@ -1,8 +1,5 @@
 package com.yangnan.selfhelpordingsystem.emun;
 
-/**
- * @author liuwen
- */
 public enum HttpStatus {
 
     OK(200, "成功"),
