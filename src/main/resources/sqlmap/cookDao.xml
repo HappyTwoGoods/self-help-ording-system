@@ -3,9 +3,9 @@
 <mapper namespace="com.yangnan.selfhelpordingsystem.dao.CookDao">
     <resultMap id="CookInfoMap" type="com.yangnan.selfhelpordingsystem.entity.CookEntity">
         <result column="id" property="id"></result>
-        <result column="cook_name" property="name"></result>
+        <result column="cook_name" property="cookName"></result>
         <result column="telephone" property="telephone"></result>
-        <result column="cook_status" property="status"></result>
+        <result column="cook_status" property="cookStatus"></result>
         <result column="add_time" property="addTime"></result>
         <result column="update_time" property="updateTime"></result>
     </resultMap>
@@ -19,16 +19,16 @@
         update_time
     </sql>
 
-    <insert id="insertCooker" parameterType="map">
+    <insert id="insertCooker" parameterType="map" useGeneratedKeys="true" keyProperty="cookInfo.id">
         INSERT INTO
-        cook(cook_name, telephone, cook_status, add_time, update_time) INSERT
-        VALUES {
-        #{cookName},
-        #{telephone},
-        #{cookStatus},
+        cook(cook_name, telephone, cook_status, add_time, update_time)
+        VALUES (
+        #{cookInfo.cookName},
+        #{cookInfo.telephone},
+        #{cookInfo.cookStatus},
         NOW(),
         NOW()
-        }
+        )
     </insert>
 
     <delete id="deleteCooker" parameterType="java.lang.Integer">
@@ -51,7 +51,7 @@
             </if>
             update_time = NOW()
         </set>
-        WHERE id = #{cookId}
+        WHERE id = #{cookInfo.id}
     </update>
 
     <select id="queryCookInfo" parameterType="map" resultMap="CookInfoMap">

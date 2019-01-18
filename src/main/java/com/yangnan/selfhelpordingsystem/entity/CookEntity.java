@@ -6,10 +6,11 @@ import java.util.Date;
 
 @Data
 public class CookEntity {
+    
     private Integer Id;
-    private String name;
+    private String cookName;
     private String telephone;
-    private Integer status;
+    private Integer cookStatus;
     private Date addTime;
     private Date updateTime;
 }
