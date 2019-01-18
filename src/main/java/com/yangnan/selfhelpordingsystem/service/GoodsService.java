@@ -1,28 +1,28 @@
-package com.yangnan.selfhelpordingsystem.dao;
+package com.yangnan.selfhelpordingsystem.service;
 
+import com.yangnan.selfhelpordingsystem.dto.GoodsDTO;
 import com.yangnan.selfhelpordingsystem.entity.GoodsEntity;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
-public interface GoodsDao {
+public interface GoodsService {
     /**
      * 新增菜
      *
-     * @param goods
+     * @param goodsDTO
      * @return
      */
-    int insertGoods(@Param("goods") GoodsEntity goods);
+    int insertGoods(@Param("goods") GoodsDTO goodsDTO);
 
     /**
      * 更改菜
      *
-     * @param goodsEntity
+     * @param goodsDTO
      * @return
      */
-    int updateGoodsById(@Param("goods") GoodsEntity goodsEntity);
+    int updateGoodsById(@Param("goods") GoodsDTO goodsDTO);
 
     /**
      * 更改菜的库存
@@ -56,7 +56,7 @@ public interface GoodsDao {
      * @param cookIds
      * @return
      */
-    List<GoodsEntity> selectGoodsByCookIds(@Param("cookIds") List<Integer> cookIds);
+    List<GoodsDTO> selectGoodsByCookIds(@Param("cookIds") List<Integer> cookIds);
 
     /**
      * 根据菜名模糊查菜
@@ -64,7 +64,7 @@ public interface GoodsDao {
      * @param name
      * @return
      */
-    List<GoodsEntity> selectGoodsByName(@Param("name") String name);
+    List<GoodsDTO> selectGoodsByName(@Param("name") String name);
 
     /**
      * 根据id查菜
@@ -72,5 +72,5 @@ public interface GoodsDao {
      * @param id
      * @return
      */
-    GoodsEntity selectGoodsById(@Param("id") int id);
+    GoodsDTO selectGoodsById(@Param("id") int id);
 }

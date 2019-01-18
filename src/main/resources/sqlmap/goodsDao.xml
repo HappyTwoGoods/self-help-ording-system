@@ -15,4 +15,110 @@
         <result column="add_time" property="addTime"></result>
         <result column="update_time" property="updateTime"></result>
     </resultMap>
+    <sql id="allField">
+        id,
+        goods_name,
+        goods_type,
+        cook_id,
+        price,
+        discount,
+        goods_limit,
+        image,
+        goods_num,
+        goods_describe,
+        add_time,
+        update_time
+    </sql>
+
+    <insert id="insertGoods" parameterType="map">
+        insert into goods
+        (goods_name,
+        goods_type,
+        cook_id,
+        price,
+        discount,
+        goods_limit,
+        image,
+        goods_num,goods_describe,add_time,update_time)
+        values
+        (#{goods.name},#{goods.type},#{goods.cookId},#{goods.price},#{goods.discount},#{goods.limit},#{goods.image},#{goods.goodsNum},#{goods.describe},now(),now())
+    </insert>
+
+    <update id="updateGoodsById">
+        update goods
+        <set>
+            <if test="goods.name!=null and goods.name!=''">
+                goods_name=#{goods.name},
+            </if>
+            <if test="goods.type!=null and goods.type!=''">
+                goods_type=#{goods.type},
+            </if>
+            <if test="goods.cookId!=null and goods.cookId!=''">
+                cook_id=#{goods.cookId},
+            </if>
+            <if test="goods.price!=null">
+                price=#{goods.price},
+            </if>
+            <if test="goods.discount!=null">
+                discount=#{goods.discount},
+            </if>
+            <if test="goods.limit!=null">
+                goods_limit=#{goods.limit},
+            </if>
+            <if test="goods.image!=null and goods.image!=''">
+                image=#{goods.image},
+            </if>
+            <if test="goods.goodsNum!=null and goods.goodsNum!=''">
+                goods_num=#{goods.goodsNum},
+            </if>
+            <if test="goods.describe!=null and goods.describe!=''">
+                goods_describe=#{goods.describe},
+            </if>
+            update_time=now()
+        </set>
+        where id=#{goods.id}
+    </update>
+
+    <update id="reduceGoodsNumById">
+        update goods
+        set goods_num=goods_num-#{num},
+        update_time=now()
+        where id=#{id} and goods_num>=#{num}
+    </update>
+
+    <delete id="deleteGoodsById">
+        delete
+        from goods
+        where id=#{id}
+    </delete>
+
+    <delete id="deleteGoodsByCookId">
+        delete
+        from goods
+        where cook_id=#{cookId}
+    </delete>
+
+    <select id="selectGoodsByCookIds" resultMap="Goods">
+        select
+        <include refid="allField"/>
+        from goods
+        WHERE cook_id IN
+        <foreach collection="cookIds" separator="," open="(" close=")" item="cookId">
+            #{cookId}
+        </foreach>
+    </select>
+
+    <select id="selectGoodsByName" resultMap="Goods">
+        select
+        <include refid="allField"/>
+        from goods
+        WHERE goods_name like '%${name}%'
+    </select>
+
+    <select id="selectGoodsById" resultMap="Goods">
+        select
+        <include refid="allField"/>
+        from goods
+        where id=#{id}
+    </select>
 </mapper>

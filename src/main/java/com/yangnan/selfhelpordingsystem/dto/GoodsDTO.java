@@ -1,12 +1,14 @@
-package com.yangnan.selfhelpordingsystem.entity;
+package com.yangnan.selfhelpordingsystem.dto;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class GoodsEntity {
+public class GoodsDTO implements Serializable {
+    private static final long serialVersionUID = -8781778120779115922L;
     private Integer id;
     private String name;
     private Integer type;
