@@ -2,7 +2,6 @@ package com.yangnan.selfhelpordingsystem.dao;
 
 import com.yangnan.selfhelpordingsystem.entity.GoodsEntity;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

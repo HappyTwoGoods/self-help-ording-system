@@ -5,8 +5,52 @@
         <result column="id" property="id"></result>
         <result column="goods_info" property="goodsInfo"></result>
         <result column="price" property="price"></result>
+        <result column="user_id" property="userId"></result>
+        <result column="pay_type" property="payType"></result>
         <result column="bill_status" property="status"></result>
         <result column="add_time" property="addTime"></result>
         <result column="update_time" property="updateTime"></result>
     </resultMap>
+    <sql id="allField">
+        id,
+        goods_info,
+        price,
+        user_id,
+        pay_type,
+        bill_status,
+        add_time,
+        update_time
+    </sql>
+    <insert id="insertBill" parameterType="com.yangnan.selfhelpordingsystem.entity.BillEntity">
+        insert into bill
+        (goods_info, price, user_id,paytype,bill_status, add_time,update_time)
+        values
+        (#{bill.goodsInfo},#{bill.price},#{bill.userId},#{bill.payType},#{bill.status},now(),now())
+    </insert>
+
+    <update id="updateBillStatus" parameterType="int">
+        update bill
+        set bill_status=#{status},
+        update_time=now()
+        where id=#{id}
+    </update>
+
+    <update id="updateGoodsinfo" parameterType="map">
+        update bill
+        set goods_info=#{goodsInfo},
+        update_time=now()
+        where id=#{id}
+    </update>
+
+    <select id="selectBillById" resultType="Bill">
+        select <include refid="allField"/>
+        from bill
+        where id=#{id}
+    </select>
+
+    <select id="selectBillByUserId" resultType="Bill">
+        select <include refid="allField"/>
+        from bill
+        where user_id=#{userId}
+    </select>
 </mapper>
