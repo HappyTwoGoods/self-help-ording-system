@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public class GoodsServiceImpl implements GoodsService {
     @Resource
-    GoodsDao goodsDao;
+    private GoodsDao goodsDao;
 
     @Override
     public int insertGoods(GoodsDTO goodsDTO) {

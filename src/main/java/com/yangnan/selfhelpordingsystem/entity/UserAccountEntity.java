@@ -6,13 +6,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class BillEntity {
+public class UserAccountEntity {
     private Integer id;
-    private String goodsInfo;
+    private String name;
+    private String password;
     private BigDecimal price;
-    private String userId;
-    private Integer payType;
-    private Integer status;
     private Date addTime;
     private Date updateTime;
 }

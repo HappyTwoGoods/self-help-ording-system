@@ -106,6 +106,7 @@
         <foreach collection="cookIds" separator="," open="(" close=")" item="cookId">
             #{cookId}
         </foreach>
+        and goods_num &gt; 0
     </select>
 
     <select id="selectGoodsByName" resultMap="Goods">

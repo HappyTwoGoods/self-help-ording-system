@@ -1,7 +1,6 @@
-package com.yangnan.selfhelpordingsystem.serviceTest;
+package com.yangnan.selfhelpordingsystem.service;
 
 import com.yangnan.selfhelpordingsystem.dto.GoodsDTO;
-import com.yangnan.selfhelpordingsystem.service.GoodsService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +16,7 @@ import java.util.List;
 @SpringBootTest
 public class GoodsServiceTest {
     @Resource
-    GoodsService goodsService;
+    private GoodsService goodsService;
 
     @Test
     public void insertGoodsTest() {
@@ -49,13 +48,13 @@ public class GoodsServiceTest {
         goodsDTO.setDiscount(5);
         goodsDTO.setType(2);
         int i = goodsService.updateGoodsById(goodsDTO);
-        Assert.assertEquals(1,i);
+        Assert.assertEquals(1, i);
     }
 
     @Test
     public void reduceGoodNumByIdTest() {
         int i = goodsService.reduceGoodsNumById(10, 2);
-        Assert.assertEquals(1,i);
+        Assert.assertEquals(1, i);
     }
 
     @Test
@@ -75,8 +74,9 @@ public class GoodsServiceTest {
         List<GoodsDTO> list = goodsService.selectGoodsByName("宫保");
         Assert.assertNotNull(list);
     }
+
     @Test
-    public void selectGoodByCookIds(){
+    public void selectGoodByCookIds() {
         List<Integer> integers = new ArrayList<>();
         integers.add(1);
         integers.add(2);
@@ -84,8 +84,9 @@ public class GoodsServiceTest {
         System.out.println(goodsDTOS);
         Assert.assertNotNull(goodsDTOS);
     }
+
     @Test
-    public void selectGoodById(){
+    public void selectGoodById() {
         GoodsDTO goodsDTO = goodsService.selectGoodsById(10);
         Assert.assertNotNull(goodsDTO);
     }
