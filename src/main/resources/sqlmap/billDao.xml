@@ -23,9 +23,9 @@
     </sql>
     <insert id="insertBill" parameterType="com.yangnan.selfhelpordingsystem.entity.BillEntity">
         insert into bill
-        (goods_info, price, user_id,paytype,bill_status, add_time,update_time)
+        (goods_info, price, user_id,pay_type,bill_status, add_time,update_time)
         values
-        (#{bill.goodsInfo},#{bill.price},#{bill.userId},#{bill.payType},#{bill.status},now(),now())
+        (#{bill.goodsInfo},#{bill.price},#{bill.userId},#{bill.payType},1,now(),now())
     </insert>
 
     <update id="updateBillStatus" parameterType="int">
@@ -35,20 +35,23 @@
         where id=#{id}
     </update>
 
-    <update id="updateGoodsinfo" parameterType="map">
+    <update id="updateGoodsInfoAndPrice" parameterType="map">
         update bill
-        set goods_info=#{goodsInfo},
+        set goods_info=#{goods},
+        <if test="price!=null">
+            price=#{price},
+        </if>
         update_time=now()
         where id=#{id}
     </update>
 
-    <select id="selectBillById" resultType="Bill">
+    <select id="selectBillById" resultMap="Bill">
         select <include refid="allField"/>
         from bill
         where id=#{id}
     </select>
 
-    <select id="selectBillByUserId" resultType="Bill">
+    <select id="selectBillByUserId" resultMap="Bill">
         select <include refid="allField"/>
         from bill
         where user_id=#{userId}
