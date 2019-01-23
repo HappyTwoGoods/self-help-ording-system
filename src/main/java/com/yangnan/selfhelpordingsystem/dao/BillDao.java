@@ -17,7 +17,7 @@ public interface BillDao {
 
     /**
      * 更新账单状态
-     *
+     * @param id
      * @param status
      * @return
      */
@@ -50,5 +50,12 @@ public interface BillDao {
      * @return
      */
     List<BillEntity> selectBillByUserId(@Param("userId") int userId);
+
+    /**
+     * 根据账单状态查订单
+     * @param status
+     * @return
+     */
+    List<BillEntity> selectBillByStatus(@Param("status") int status);
 }
 

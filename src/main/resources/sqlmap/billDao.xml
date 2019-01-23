@@ -46,14 +46,22 @@
     </update>
 
     <select id="selectBillById" resultMap="Bill">
-        select <include refid="allField"/>
+        select
+        <include refid="allField"/>
         from bill
         where id=#{id}
     </select>
 
     <select id="selectBillByUserId" resultMap="Bill">
-        select <include refid="allField"/>
+        select
+        <include refid="allField"/>
         from bill
         where user_id=#{userId}
+    </select>
+    <select id="selectBillByStatus" resultMap="Bill">
+        select
+        <include refid="allField"/>
+        from bill
+        where bill_status=#{status}
     </select>
 </mapper>

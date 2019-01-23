@@ -69,4 +69,10 @@ public class BillServiceImpl implements Billservice {
         List<BillEntity> billEntities = billDao.selectBillByUserId(userId);
         return BeansListUtils.copyListProperties(billEntities, BillDTO.class);
     }
+
+    @Override
+    public List<BillDTO> selectBillByStatus(int status) {
+        List<BillEntity> billEntities = billDao.selectBillByStatus(status);
+        return BeansListUtils.copyListProperties(billEntities,BillDTO.class);
+    }
 }
