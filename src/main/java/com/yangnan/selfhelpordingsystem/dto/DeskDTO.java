@@ -6,14 +6,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-public class CookDTO implements Serializable {
+public class DeskDTO implements Serializable {
 
     private Integer id;
-    private String cookName;
-    private String telephone;
-    private Integer cookStatus;
-    private String nickname;
-    private String cookPassword;
+    private Integer deskNum;
+    private String describe;
     private Date addTime;
     private Date updateTime;
 }

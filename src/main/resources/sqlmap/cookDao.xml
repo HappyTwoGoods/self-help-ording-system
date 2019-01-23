@@ -2,10 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yangnan.selfhelpordingsystem.dao.CookDao">
     <resultMap id="CookInfoMap" type="com.yangnan.selfhelpordingsystem.entity.CookEntity">
-        <result column="id" property="id"></result>
+        <result column="id" property="id"/>
         <result column="cook_name" property="cookName"></result>
         <result column="telephone" property="telephone"></result>
         <result column="cook_status" property="cookStatus"></result>
+        <result column="nickname" property="nickname"></result>
+        <result column="cook_password" property="cookPassword"></result>
         <result column="add_time" property="addTime"></result>
         <result column="update_time" property="updateTime"></result>
     </resultMap>
@@ -15,6 +17,8 @@
         cook_name,
         telephone,
         cook_status,
+        nickname,
+        cook_password,
         add_time,
         update_time
     </sql>
@@ -48,6 +52,12 @@
             </if>
             <if test="cookInfo.cookStatus != null">
                 cook_status = #{cookInfo.cookStatus},
+            </if>
+            <if test="cookInfo.nickname != null">
+                nickname = #{cookInfo.nickname},
+            </if>
+            <if test="cookInfo.cookPassword != null">
+                cook_password = #{cookInfo.cookPassword}
             </if>
             update_time = NOW()
         </set>

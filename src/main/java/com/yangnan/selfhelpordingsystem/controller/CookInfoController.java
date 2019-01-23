@@ -48,6 +48,8 @@ public class CookInfoController {
     public CommonResult updateCookInfo(@RequestParam(required = false, defaultValue = "")String cookName,
                                        @RequestParam(required = false, defaultValue = "")String telephone,
                                        @RequestParam(required = false, defaultValue = "-1")Integer cookStatus,
+                                       @RequestParam(required = false, defaultValue = "")String nockname,
+                                       @RequestParam(required = false, defaultValue = "")String cookPassword,
                                        @RequestParam(required = true, defaultValue = "0")Integer cookId){
         if (cookId == null) {
             return CommonResult.fail(403,"参数错误");
@@ -56,6 +58,8 @@ public class CookInfoController {
         cookDTO.setCookName(cookName);
         cookDTO.setTelephone(telephone);
         cookDTO.setCookStatus(cookStatus);
+        cookDTO.setNickname(nockname);
+        cookDTO.setCookPassword(cookPassword);
         cookDTO.setId(cookId);
         int result = cookService.updateCookInfo(cookDTO);
         if (result <= 0){

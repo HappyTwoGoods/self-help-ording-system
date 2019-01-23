@@ -47,9 +47,6 @@ public class CookServiceImpl implements CookService {
 
     @Override
     public List<CookDTO> queryCookInfo(String cookName, String telephone, Integer cookStatus) {
-        if (cookName == null && telephone == null && cookStatus == null) {
-            return null;
-        }
         List<CookEntity> cookEntityList = cookDao.queryCookInfo(cookName, telephone, cookStatus);
         if (CollectionUtils.isEmpty(cookEntityList)) {
             return Collections.emptyList();
