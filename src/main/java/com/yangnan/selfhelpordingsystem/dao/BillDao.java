@@ -3,6 +3,7 @@ package com.yangnan.selfhelpordingsystem.dao;
 import com.yangnan.selfhelpordingsystem.entity.BillEntity;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface BillDao {
@@ -25,12 +26,14 @@ public interface BillDao {
 
     /**
      * 更新商品信息
-     *
+     * @param id
      * @param goodsInfo
+     * @param price
      * @return
      */
-    int updateGoodsinfo(@Param("id") int id,
-                        @Param("goods") String goodsInfo);
+    int updateGoodsInfoAndPrice(@Param("id") int id,
+                                @Param("goods") String goodsInfo,
+                                @Param("price")BigDecimal price);
 
     /**
      * 通过id查订单
