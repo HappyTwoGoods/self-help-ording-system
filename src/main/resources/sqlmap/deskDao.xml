@@ -17,13 +17,13 @@
         update_time
     </sql>
 
-    <insert id="insertDesk" parameterType="map" useGeneratedKeys="true" keyProperty="deskInfo.id">
+    <insert id="insertDesk" parameterType="com.yangnan.selfhelpordingsystem.entity.DeskEntity" useGeneratedKeys="true" keyProperty="desk.id">
         INSERT INTO
         desk
         (num, desk_describe, add_time, update_time)
         VALUES (
-        num = #{deskInfo.num},
-        desk_describe = #{deskInfo.describe},
+        #{desk.deskNum},
+        #{desk.describe},
         NOW(),
         NOW()
         )

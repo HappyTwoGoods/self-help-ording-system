@@ -9,8 +9,12 @@ import java.util.Date;
 public class DeskDTO implements Serializable {
 
     private Integer id;
-    private Integer deskNum;
+
+    private String deskNum;
+
     private String describe;
+
     private Date addTime;
+
     private Date updateTime;
 }

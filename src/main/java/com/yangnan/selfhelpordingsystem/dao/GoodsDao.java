@@ -3,6 +3,7 @@ package com.yangnan.selfhelpordingsystem.dao;
 import com.yangnan.selfhelpordingsystem.entity.GoodsEntity;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -72,4 +73,26 @@ public interface GoodsDao {
      * @return
      */
     GoodsEntity selectGoodsById(@Param("id") int id);
+
+    /**
+     * 动态搜索查询商品信息
+     *
+     * @param goodName
+     * @param goodType
+     * @param discount
+     * @return
+     */
+    List<GoodsEntity> searchGoods(@Param("goodName")String goodName,
+                                  @Param("goodType") Integer goodType,
+                                  @Param("discount") Integer discount);
+
+    /**
+     * 根据商品价格区间查找商品信息
+     *
+     * @param startPrice
+     * @param endPrice
+     * @return
+     */
+    List<GoodsEntity> selectByPrice(@Param("startPrice")BigDecimal startPrice,
+                                    @Param("endPrice")BigDecimal endPrice);
 }

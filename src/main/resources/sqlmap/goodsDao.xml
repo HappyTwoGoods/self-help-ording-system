@@ -122,4 +122,27 @@
         from goods
         where id=#{id}
     </select>
+    
+    <select id="searchGoods" parameterType="map" resultMap="Goods">
+        select
+        <include refid="allField"/>
+        FROM goods
+        WHERE 1=1
+        <if test="goodName != null">
+            AND goods_name LIKE CONCAT(CONCAT('%',#{goodName}),'%')
+        </if>
+        <if test="goodType != null">
+            AND goods_type = #{goodType}
+        </if>
+        <if test="discount != null">
+            AND discount &lt; #{discount}
+        </if>
+    </select>
+
+    <select id="selectByPrice" parameterType="map" resultMap="Goods">
+        SELECT
+        <include refid="allField"/>
+        FROM goods
+        WHERE   #{startPrice} &lt; price AND price &lt; #{endPrice}
+    </select>
 </mapper>

@@ -11,8 +11,12 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GoodsServiceImpl implements GoodsService {
@@ -90,5 +94,20 @@ public class GoodsServiceImpl implements GoodsService {
         GoodsDTO goodsDTO = new GoodsDTO();
         BeanUtils.copyProperties(goodsEntity, goodsDTO);
         return goodsDTO;
+    }
+
+    @Override
+    public List<GoodsDTO> searchGoods(String goodName, Integer goodType, Integer discount) {
+        List<GoodsEntity> goodsEntities = goodsDao.searchGoods(goodName,goodType,discount);
+        return BeansListUtils.copyListProperties(goodsEntities, GoodsDTO.class);
+    }
+
+    @Override
+    public List<GoodsDTO> selectByPrice(BigDecimal startPrice, BigDecimal endPrice) {
+        if (startPrice.compareTo(endPrice) > 0){
+            return Collections.emptyList();
+        }
+        List<GoodsEntity> goodsEntityList = goodsDao.selectByPrice(startPrice,endPrice);
+        return BeansListUtils.copyListProperties(goodsEntityList, GoodsDTO.class);
     }
 }

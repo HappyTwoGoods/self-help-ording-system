@@ -25,13 +25,13 @@ public class DeskServiceImpl implements DeskService {
             return 0;
         }
         DeskEntity deskEntity = new DeskEntity();
-        deskDao.insertDesk(deskEntity);
         BeanUtils.copyProperties(deskDTO, deskEntity);
+        deskDao.insertDesk(deskEntity);
         return deskEntity.getId();
     }
 
     @Override
-    public List<DeskDTO> queryDeskInfo(Integer num) {
+    public List<DeskDTO> queryDeskInfo(String num) {
         List<DeskEntity> deskEntityList = deskDao.queryDeskInfo(num);
         if (CollectionUtils.isEmpty(deskEntityList)) {
             return Collections.emptyList();
@@ -40,11 +40,11 @@ public class DeskServiceImpl implements DeskService {
     }
 
     @Override
-    public int updateDeskInfo(Integer num, String deskDescribe) {
-        if (num < 0 && deskDescribe == null) {
+    public int updateDeskInfo(String num, String deskDescribe,Integer deskId) {
+        if (num == null && deskDescribe == null) {
             return 0;
         }
-        return deskDao.updateDeskInfo(num, deskDescribe);
+        return deskDao.updateDeskInfo(num, deskDescribe,deskId);
     }
 
     @Override

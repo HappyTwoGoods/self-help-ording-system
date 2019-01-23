@@ -10,10 +10,10 @@ public interface DeskDao {
     /**
      * 添加餐桌信息
      *
-     * @param deskEntity
+     * @param deskInfo
      * @return
      */
-    int insertDesk(@Param("deskInfo")DeskEntity deskEntity);
+    int insertDesk(@Param("desk")DeskEntity deskInfo);
 
     /**
      * 动态查询餐桌信息
@@ -21,7 +21,7 @@ public interface DeskDao {
      * @param num
      * @return
      */
-    List<DeskEntity> queryDeskInfo(@Param("num")Integer num);
+    List<DeskEntity> queryDeskInfo(@Param("num")String num);
 
     /**
      * 动态修改餐桌信息
@@ -30,8 +30,9 @@ public interface DeskDao {
      * @param deskDescribe
      * @return
      */
-    int updateDeskInfo(@Param("num")Integer num,
-                       @Param("deskDescribe")String deskDescribe);
+    int updateDeskInfo(@Param("num")String num,
+                       @Param("deskDescribe")String deskDescribe,
+                       @Param("deskId")Integer deskId);
 
     /**
      * 根据id删除餐桌信息

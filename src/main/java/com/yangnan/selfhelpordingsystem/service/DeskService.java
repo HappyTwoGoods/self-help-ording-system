@@ -20,7 +20,7 @@ public interface DeskService {
      * @param num
      * @return
      */
-    List<DeskDTO> queryDeskInfo(Integer num);
+    List<DeskDTO> queryDeskInfo(String num);
 
     /**
      * 动态修改餐桌信息
@@ -29,7 +29,7 @@ public interface DeskService {
      * @param deskDescribe
      * @return
      */
-    int updateDeskInfo(Integer num, String deskDescribe);
+    int updateDeskInfo(String num, String deskDescribe,Integer deskId);
 
     /**
      * 根据id删除餐桌信息

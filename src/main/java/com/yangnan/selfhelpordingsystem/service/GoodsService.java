@@ -5,6 +5,7 @@ import com.yangnan.selfhelpordingsystem.entity.GoodsEntity;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface GoodsService {
@@ -73,4 +74,23 @@ public interface GoodsService {
      * @return
      */
     GoodsDTO selectGoodsById(@Param("id") int id);
+
+    /**
+     * 动态查询商品信息
+     *
+     * @param goodName
+     * @param goodType
+     * @param discount
+     * @return
+     */
+    List<GoodsDTO> searchGoods(String goodName, Integer goodType, Integer discount);
+
+    /**
+     * 根据价格区间查询商品
+     *
+     * @param startPrice
+     * @param endPrice
+     * @return
+     */
+    List<GoodsDTO> selectByPrice(BigDecimal startPrice, BigDecimal endPrice);
 }

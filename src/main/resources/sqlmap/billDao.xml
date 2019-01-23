@@ -42,13 +42,13 @@
         where id=#{id}
     </update>
 
-    <select id="selectBillById" resultType="Bill">
+    <select id="selectBillById" resultMap="Bill">
         select <include refid="allField"/>
         from bill
         where id=#{id}
     </select>
 
-    <select id="selectBillByUserId" resultType="Bill">
+    <select id="selectBillByUserId" resultMap="Bill">
         select <include refid="allField"/>
         from bill
         where user_id=#{userId}
