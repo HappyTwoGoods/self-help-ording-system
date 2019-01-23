@@ -17,7 +17,7 @@ public interface BillDao {
 
     /**
      * 更新账单状态
-     *
+     * @param id
      * @param status
      * @return
      */
