@@ -37,7 +37,7 @@ public class BillServiceTest {
 
     @Test
     public void updateGoodsInfoAndPriceTest() {
-        int i = billservice.updateGoodsInfoAndPrice(1, "1,2,3;12,3,3",null);
+        int i = billservice.updateGoodsInfoAndPrice(1, "1,2,3;12,3,3", null);
         Assert.assertEquals(1, i);
     }
 
@@ -46,10 +46,16 @@ public class BillServiceTest {
         BillDTO billDTO = billservice.selectBillById(1);
         Assert.assertNotNull(billDTO);
     }
+
     @Test
     public void selectBillByUserIdTest() {
         List<BillDTO> billDTOS = billservice.selectBillByUserId(1);
-        System.out.println(billDTOS);
+        Assert.assertNotNull(billDTOS);
+    }
+
+    @Test
+    public void selectBillByStatusTest() {
+        List<BillDTO> billDTOS = billservice.selectBillByStatus(4);
         Assert.assertNotNull(billDTOS);
     }
 }

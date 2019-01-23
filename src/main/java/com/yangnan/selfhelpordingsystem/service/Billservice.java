@@ -16,7 +16,7 @@ public interface Billservice {
 
     /**
      * 更新账单状态
-     *
+     * @param id
      * @param status
      * @return
      */
@@ -46,4 +46,11 @@ public interface Billservice {
      * @return
      */
     List<BillDTO> selectBillByUserId(int userId);
+
+    /**
+     * 根据订单状态查订单
+     * @param status
+     * @return
+     */
+    List<BillDTO> selectBillByStatus(int status);
 }
