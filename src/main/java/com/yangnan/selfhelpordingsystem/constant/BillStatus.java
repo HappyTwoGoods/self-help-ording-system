@@ -13,12 +13,4 @@ public class BillStatus {
      * 已支付
      */
     public static final int PAYED = 2;
-    /**
-     * 上菜中
-     */
-    public static final int USING = 3;
-    /**
-     * 上菜完成
-     */
-    public static final int USED = 4;
 }

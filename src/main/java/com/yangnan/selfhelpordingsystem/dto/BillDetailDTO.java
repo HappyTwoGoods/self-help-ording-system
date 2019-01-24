@@ -7,12 +7,13 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class BillDTO implements Serializable {
-    private static final long serialVersionUID = -5810583702720403879L;
+public class BillDetailDTO implements Serializable {
+    private static final long serialVersionUID = 3638980306983241940L;
     private Integer id;
+    private Integer billId;
+    private Integer goodsId;
     private BigDecimal price;
-    private Integer userId;
-    private Integer payType;
+    private Integer num;
     private Integer status;
     private Date addTime;
     private Date updateTime;

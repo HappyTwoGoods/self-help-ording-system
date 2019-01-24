@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yangnan.selfhelpordingsystem.dao.BillDetailDao">
+    <resultMap id="BillDetail" type="com.yangnan.selfhelpordingsystem.entity.BillDetailEntity">
+        <result column="id" property="id"></result>
+        <result column="bill_id" property="billId"></result>
+        <result column="goods_id" property="goodsId"></result>
+        <result column="price" property="price"></result>
+        <result column="num" property="num"></result>
+        <result column="bill_detail_status" property="status"></result>
+        <result column="add_time" property="addTime"></result>
+        <result column="update_time" property="updateTime"></result>
+    </resultMap>
+    <sql id="allField">
+        id,
+        bill_id,
+        price,
+        num,
+        bill_detail_status,
+        add_time,
+        update_time
+    </sql>
+
+    <insert id="addBillDetail" parameterType="com.yangnan.selfhelpordingsystem.entity.BillDetailEntity">
+        insert into bill_detail
+        (bill_id,goods_id,price,num,bill_detail_status,add_time,update_time)
+        values
+        (#{detail.billId},#{detail.goodsId},#{detail.price},#{detail.num},#{detail.status},now(),now())
+    </insert>
+
+    <update id="updateDetailStatusById" parameterType="map">
+        update bill_detail
+        set bill_detail_status=#{status},
+        update_time=now()
+        where id = #{id}
+    </update>
+
+    <select id="selectDetailByGoodsIds" parameterType="java.util.List" resultMap="BillDetail">
+        select
+        <include refid="allField"/>
+        from bill_detail
+        where goods_id in
+        <foreach collection="goodsIds" item="goodId" separator="," open="(" close=")">
+            #{goodId}
+        </foreach>
+    </select>
+
+    <select id="selectDetailByBillId" parameterType="java.lang.Integer" resultMap="BillDetail">
+        select
+        <include refid="allField"/>
+        from bill_detail
+        where bill_id = #{billId}
+    </select>
+
+</mapper>
