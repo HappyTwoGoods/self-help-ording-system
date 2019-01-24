@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 public class BillInfoController {
     @Resource
-    Billservice billservice;
+    private Billservice billservice;
     @GetMapping("/bill/selectNewBill")
     public CommonResult selectNewBill(){
         List<BillDTO> billDTOS = billservice.selectBillByStatus(BillStatus.PAYED);
