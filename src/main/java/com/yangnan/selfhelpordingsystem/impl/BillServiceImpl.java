@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 public class BillServiceImpl implements Billservice {
     @Resource
-    BillDao billDao;
+    private BillDao billDao;
 
     @Override
     public int insertBill(BillDTO billDTO) {
