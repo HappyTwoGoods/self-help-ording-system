@@ -24,20 +24,13 @@ public class BillServiceTest {
         billDTO.setPayType(0);
         billDTO.setPrice(BigDecimal.valueOf(15));
         billDTO.setUserId(2);
-        billDTO.setGoodsInfo("1,2,1;12,3,4;14,3,4");
         int i = billservice.insertBill(billDTO);
         Assert.assertEquals(1, i);
     }
 
     @Test
     public void updateBillStatusTest() {
-        int i = billservice.updateBillStatus(1, BillStatus.USED);
-        Assert.assertEquals(1, i);
-    }
-
-    @Test
-    public void updateGoodsInfoAndPriceTest() {
-        int i = billservice.updateGoodsInfoAndPrice(1, "1,2,3;12,3,3", null);
+        int i = billservice.updateBillStatus(1, BillStatus.PAYED);
         Assert.assertEquals(1, i);
     }
 
@@ -55,7 +48,7 @@ public class BillServiceTest {
 
     @Test
     public void selectBillByStatusTest() {
-        List<BillDTO> billDTOS = billservice.selectBillByStatus(4);
+        List<BillDTO> billDTOS = billservice.selectBillByStatus(BillStatus.PAYED);
         Assert.assertNotNull(billDTOS);
     }
 }

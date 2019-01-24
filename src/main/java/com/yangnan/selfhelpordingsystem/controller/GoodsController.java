@@ -3,7 +3,6 @@ package com.yangnan.selfhelpordingsystem.controller;
 import com.yangnan.selfhelpordingsystem.common.CommonResult;
 import com.yangnan.selfhelpordingsystem.dto.GoodsDTO;
 import com.yangnan.selfhelpordingsystem.service.GoodsService;
-import jdk.nashorn.internal.ir.ReturnNode;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,12 +50,12 @@ public class GoodsController {
      * @return
      */
     @GetMapping("/goods/query")
-    public CommonResult selectGoods(@RequestParam(required = false, defaultValue = "")String goodsName,
-                                    @RequestParam(required = false, defaultValue = "")Integer goodType,
-                                    @RequestParam(required = false, defaultValue = "")Integer discount){
-        List<GoodsDTO> goodsDTOList = goodsService.searchGoods(goodsName,goodType,discount);
-        if (goodsDTOList.isEmpty()){
-            return CommonResult.fail(404,"没有相关资源！");
+    public CommonResult selectGoods(@RequestParam(required = false, defaultValue = "") String goodsName,
+                                    @RequestParam(required = false, defaultValue = "") Integer goodType,
+                                    @RequestParam(required = false, defaultValue = "") Integer discount) {
+        List<GoodsDTO> goodsDTOList = goodsService.searchGoods(goodsName, goodType, discount);
+        if (goodsDTOList.isEmpty()) {
+            return CommonResult.fail(404, "没有相关资源！");
         }
         return CommonResult.success(goodsDTOList);
     }
