@@ -17,4 +17,10 @@
       values
       (#{manager.name},#{manager.idCard},#{manager.telephone},#{manager.userName},#{manager.password},now(),now())
     </insert>
+
+    <select id="selectManager" parameterType="java.lang.String" resultType="int">
+        select count(id)
+        from managers
+        where user_name=#{name} and manager_password=#{password}
+    </select>
 </mapper>

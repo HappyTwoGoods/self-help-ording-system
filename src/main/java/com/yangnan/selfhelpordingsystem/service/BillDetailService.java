@@ -14,7 +14,7 @@ public interface BillDetailService {
     int addBillDetail(BillDetailDTO detail);
 
     /**
-     * 修改订单
+     * 修改订单状态
      *
      * @param id
      * @param status
@@ -37,4 +37,12 @@ public interface BillDetailService {
      * @return
      */
     List<BillDetailDTO> selectDetailByBillId(int billId);
+
+    /**
+     * 根据状态查详单
+     * @param status
+     * @return
+     */
+    List<BillDetailDTO> selectDetailByStatus(int status);
+
 }

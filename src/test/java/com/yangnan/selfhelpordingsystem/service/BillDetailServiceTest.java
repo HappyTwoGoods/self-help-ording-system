@@ -52,4 +52,10 @@ public class BillDetailServiceTest {
         List<BillDetailDTO> billDetailDTOS = billDetailService.selectDetailByBillId(1);
         Assert.assertNotNull(billDetailDTOS);
     }
+
+    @Test
+    public void selectByStatus() {
+        List<BillDetailDTO> billDetailDTOS = billDetailService.selectDetailByStatus(2);
+        Assert.assertNotNull(billDetailDTOS);
+    }
 }

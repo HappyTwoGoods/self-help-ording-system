@@ -60,4 +60,14 @@ public class BillDetailServiceImpl implements BillDetailService {
         List<BillDetailEntity> billDetailEntities = billDetailDao.selectDetailByBillId(billId);
         return BeansListUtils.copyListProperties(billDetailEntities, BillDetailDTO.class);
     }
+
+    @Override
+    public List<BillDetailDTO> selectDetailByStatus(int status) {
+        if (status < BillDetailStatus.CANCEL || status > BillDetailStatus.PRODUCED) {
+            return new ArrayList<>();
+        }
+        List<BillDetailEntity> billDetailEntities = billDetailDao.selectDetailByStatus(status);
+        return BeansListUtils.copyListProperties(billDetailEntities, BillDetailDTO.class);
+    }
+
 }
