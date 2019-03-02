@@ -14,6 +14,7 @@
     <sql id="allField">
         id,
         bill_id,
+        goods_id,
         price,
         num,
         bill_detail_status,
@@ -43,6 +44,7 @@
         <foreach collection="goodsIds" item="goodId" separator="," open="(" close=")">
             #{goodId}
         </foreach>
+        order by update_time desc
     </select>
 
     <select id="selectDetailByBillId" parameterType="java.lang.Integer" resultMap="BillDetail">
@@ -50,6 +52,14 @@
         <include refid="allField"/>
         from bill_detail
         where bill_id = #{billId}
+        order by update_time desc
     </select>
 
+    <select id="selectDetailByStatus" parameterType="java.lang.Integer" resultMap="BillDetail">
+        select
+        <include refid="allField"/>
+        from bill_detail
+        where bill_detail_status=#{status}
+        order by update_time asc
+    </select>
 </mapper>

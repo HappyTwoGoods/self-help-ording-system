@@ -40,4 +40,10 @@ public interface BillDetailDao {
      */
     List<BillDetailEntity> selectDetailByBillId(@Param("billId") int billId);
 
+    /**
+     * 根据状态查订单
+     * @param status
+     * @return
+     */
+    List<BillDetailEntity> selectDetailByStatus(@Param("status") int status);
 }
