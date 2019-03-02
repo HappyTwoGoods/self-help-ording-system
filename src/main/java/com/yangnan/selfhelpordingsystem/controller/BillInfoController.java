@@ -15,11 +15,12 @@ import java.util.List;
 public class BillInfoController {
     @Resource
     private Billservice billservice;
+
     @GetMapping("/bill/selectNewBill")
-    public CommonResult selectNewBill(){
+    public CommonResult selectNewBill() {
         List<BillDTO> billDTOS = billservice.selectBillByStatus(BillStatus.PAYED);
-        if(CollectionUtils.isEmpty(billDTOS)){
-            return CommonResult.fail(404,"暂时没有数据");
+        if (CollectionUtils.isEmpty(billDTOS)) {
+            return CommonResult.fail(404, "暂时没有数据");
         }
         return CommonResult.success(billDTOS);
     }
