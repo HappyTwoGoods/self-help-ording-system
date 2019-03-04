@@ -49,6 +49,21 @@ public class BillDetailServiceImpl implements BillDetailService {
             return new ArrayList<>();
         }
         List<BillDetailEntity> billDetailEntities = billDetailDao.selectDetailByGoodsIds(goodsIds);
+        if(CollectionUtils.isEmpty(billDetailEntities)){
+            return new ArrayList<>();
+        }
+        return BeansListUtils.copyListProperties(billDetailEntities, BillDetailDTO.class);
+    }
+
+    @Override
+    public List<BillDetailDTO> selectOrderByGoodsIds(List<Integer> goodsIds) {
+        if (CollectionUtils.isEmpty(goodsIds)) {
+            return new ArrayList<>();
+        }
+        List<BillDetailEntity> billDetailEntities = billDetailDao.selectOrderByGoodsIds(goodsIds);
+        if(CollectionUtils.isEmpty(billDetailEntities)){
+            return new ArrayList<>();
+        }
         return BeansListUtils.copyListProperties(billDetailEntities, BillDetailDTO.class);
     }
 
@@ -58,6 +73,9 @@ public class BillDetailServiceImpl implements BillDetailService {
             return new ArrayList<>();
         }
         List<BillDetailEntity> billDetailEntities = billDetailDao.selectDetailByBillId(billId);
+        if(CollectionUtils.isEmpty(billDetailEntities)){
+            return new ArrayList<>();
+        }
         return BeansListUtils.copyListProperties(billDetailEntities, BillDetailDTO.class);
     }
 
@@ -67,7 +85,23 @@ public class BillDetailServiceImpl implements BillDetailService {
             return new ArrayList<>();
         }
         List<BillDetailEntity> billDetailEntities = billDetailDao.selectDetailByStatus(status);
+        if(CollectionUtils.isEmpty(billDetailEntities)){
+            return new ArrayList<>();
+        }
         return BeansListUtils.copyListProperties(billDetailEntities, BillDetailDTO.class);
     }
 
+    @Override
+    public BillDetailDTO selectDetailById(int id) {
+        if(id<1){
+            return null;
+        }
+        BillDetailEntity billDetailEntity = billDetailDao.selectDetailById(id);
+        if(billDetailEntity==null){
+            return null;
+        }
+        BillDetailDTO billDetailDTO=new BillDetailDTO();
+        BeanUtils.copyProperties(billDetailEntity,billDetailDTO);
+        return billDetailDTO;
+    }
 }

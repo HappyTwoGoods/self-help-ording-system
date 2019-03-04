@@ -31,6 +31,14 @@ public interface BillDetailService {
     List<BillDetailDTO> selectDetailByGoodsIds(List<Integer> goodsIds);
 
     /**
+     * 根据商品id已下单未接单的商品的订单
+     *
+     * @param goodsIds
+     * @return
+     */
+    List<BillDetailDTO> selectOrderByGoodsIds(List<Integer> goodsIds);
+
+    /**
      * 根据账单id查订单
      *
      * @param billId
@@ -40,9 +48,18 @@ public interface BillDetailService {
 
     /**
      * 根据状态查详单
+     *
      * @param status
      * @return
      */
     List<BillDetailDTO> selectDetailByStatus(int status);
+
+    /**
+     * 根据id查订单
+     *
+     * @param id
+     * @return
+     */
+    BillDetailDTO selectDetailById(int id);
 
 }

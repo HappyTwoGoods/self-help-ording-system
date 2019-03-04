@@ -39,6 +39,9 @@ public class UserAccountServiceImpl implements UserAccountService {
             return new UserAccountDTO();
         }
         UserAccountEntity userAccountEntity = userAccountDao.selectUserAccount(name, password);
+        if (userAccountEntity == null) {
+            return new UserAccountDTO();
+        }
         UserAccountDTO userAccountDTO = new UserAccountDTO();
         BeanUtils.copyProperties(userAccountEntity, userAccountDTO);
         return userAccountDTO;

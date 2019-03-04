@@ -1,7 +1,6 @@
 package com.yangnan.selfhelpordingsystem.service;
 
 import com.yangnan.selfhelpordingsystem.dto.GoodsDTO;
-import com.yangnan.selfhelpordingsystem.entity.GoodsEntity;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -82,8 +81,15 @@ public class GoodsServiceTest {
         integers.add(1);
         integers.add(2);
         List<GoodsDTO> goodsDTOS = goodsService.selectGoodsByCookIds(integers);
-        System.out.println(goodsDTOS);
         Assert.assertNotNull(goodsDTOS);
+    }
+
+    @Test
+    public void selectGoodIdByCookId() {
+        List<GoodsDTO> goodsDTOS = goodsService.selectGoodsByCookId(1);
+        for (GoodsDTO a : goodsDTOS) {
+            System.out.println(a);
+        }
     }
 
     @Test
@@ -93,14 +99,14 @@ public class GoodsServiceTest {
     }
 
     @Test
-    public void searchGoods(){
-        List<GoodsDTO> goodsEntityList = goodsService.searchGoods(null,null,null);
+    public void searchGoods() {
+        List<GoodsDTO> goodsEntityList = goodsService.searchGoods(null, null, null);
         System.out.println(goodsEntityList);
     }
 
     @Test
-    public void selectByPrice(){
-        List<GoodsDTO> goodsDTOList = goodsService.selectByPrice(BigDecimal.valueOf(100),BigDecimal.valueOf(200));
+    public void selectByPrice() {
+        List<GoodsDTO> goodsDTOList = goodsService.selectByPrice(BigDecimal.valueOf(100), BigDecimal.valueOf(200));
         System.out.println(goodsDTOList);
     }
 }

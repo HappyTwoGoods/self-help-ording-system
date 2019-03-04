@@ -19,7 +19,7 @@
     </insert>
 
     <select id="selectManager" parameterType="java.lang.String" resultType="int">
-        select count(id)
+        select id
         from managers
         where user_name=#{name} and manager_password=#{password}
     </select>

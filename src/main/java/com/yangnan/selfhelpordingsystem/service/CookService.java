@@ -39,4 +39,22 @@ public interface CookService {
      * @return
      */
     List<CookDTO> queryCookInfo(String cookName, String telephone, Integer cookStatus);
+
+    /**
+     * 根据用户名和密码查询厨师
+     *
+     * @param username
+     * @param password
+     * @return
+     */
+    int selectCook(String username, String password);
+
+    /**
+     * 根据厨师的id修改
+     * @param id
+     * @param status
+     * @return
+     */
+    int updateStatusById(int id,int status);
+
 }

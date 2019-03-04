@@ -47,6 +47,17 @@
         order by update_time desc
     </select>
 
+    <select id="selectOrderByGoodsIds" parameterType="java.util.List" resultMap="BillDetail">
+        select
+        <include refid="allField"/>
+        from bill_detail
+        where bill_detail_status=1 and goods_id in
+        <foreach collection="goodsIds" item="goodId" separator="," open="(" close=")">
+            #{goodId}
+        </foreach>
+        order by update_time asc
+    </select>
+
     <select id="selectDetailByBillId" parameterType="java.lang.Integer" resultMap="BillDetail">
         select
         <include refid="allField"/>
@@ -61,5 +72,13 @@
         from bill_detail
         where bill_detail_status=#{status}
         order by update_time asc
+    </select>
+
+
+    <select id="selectDetailById" parameterType="java.lang.Integer" resultMap="BillDetail">
+        select
+        <include refid="allField"/>
+        from bill_detail
+        where id=#{id}
     </select>
 </mapper>
