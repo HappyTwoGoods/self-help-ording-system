@@ -1,9 +1,11 @@
 package com.yangnan.selfhelpordingsystem.controller;
 
 import com.yangnan.selfhelpordingsystem.common.CommonResult;
+import com.yangnan.selfhelpordingsystem.constant.GoodsType;
 import com.yangnan.selfhelpordingsystem.dto.GoodsDTO;
 import com.yangnan.selfhelpordingsystem.service.GoodsService;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -82,4 +84,35 @@ public class GoodsController {
         return CommonResult.success();
     }
 
+    @GetMapping("/cook/addGoods")
+    public CommonResult addGoods(String goodsName, Integer type, Integer cookId,
+                                 BigDecimal price, Integer discount, Integer limit,
+                                 String image, Integer num, String describe) {
+        if (StringUtils.isEmpty(goodsName) ||
+                type == null || type < GoodsType.STAPLE_FOOD || type > GoodsType.BARBECUE ||
+                cookId == null || cookId < 1 ||
+                price == null || price.compareTo(BigDecimal.valueOf(0)) < 0 ||
+                discount == null || discount < 0 || discount > 10 ||
+                limit == null || limit < 0 ||
+                StringUtils.isEmpty(image) ||
+                num == null || num < 0 ||
+                StringUtils.isEmpty(describe)) {
+            return CommonResult.fail(403, "参数错误");
+        }
+        GoodsDTO goodsDTO = new GoodsDTO();
+        goodsDTO.setName(goodsName);
+        goodsDTO.setType(type);
+        goodsDTO.setCookId(cookId);
+        goodsDTO.setPrice(price);
+        goodsDTO.setDiscount(discount);
+        goodsDTO.setLimit(limit);
+        goodsDTO.setImage(image);
+        goodsDTO.setGoodsNum(num);
+        goodsDTO.setDescribe(describe);
+        int addNum = goodsService.insertGoods(goodsDTO);
+        if (addNum < 1) {
+            return CommonResult.fail(500, "服务器异常，新增菜失败");
+        }
+        return CommonResult.success();
+    }
 }
