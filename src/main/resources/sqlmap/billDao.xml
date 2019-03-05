@@ -55,4 +55,12 @@
         where bill_status=#{status}
         order by add_time asc
     </select>
+
+    <update id="updatePrice">
+        UPDATE bill
+        SET
+        price = #{price},
+        update_time = NOW()
+        WHERE id = #{billId}
+    </update>
 </mapper>
