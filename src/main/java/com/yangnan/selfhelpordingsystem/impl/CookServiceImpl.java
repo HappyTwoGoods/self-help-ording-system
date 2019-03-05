@@ -11,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,10 +24,16 @@ public class CookServiceImpl implements CookService {
 
     @Override
     public int addCookerInfo(CookDTO cookDTO) {
+        if (cookDTO == null || StringUtils.isEmpty(cookDTO.getCookName()) ||
+                StringUtils.isEmpty(cookDTO.getTelephone()) ||
+                StringUtils.isEmpty(cookDTO.getNickname()) ||
+                StringUtils.isEmpty(cookDTO.getCookPassword())) {
+            return 0;
+        }
         CookEntity cookEntity = new CookEntity();
         BeanUtils.copyProperties(cookDTO, cookEntity);
-        cookDao.insertCooker(cookEntity);
-        return cookEntity.getId();
+        cookEntity.setCookStatus(CookStatus.REST);
+        return cookDao.insertCooker(cookEntity);
     }
 
     @Override
@@ -57,11 +64,31 @@ public class CookServiceImpl implements CookService {
     }
 
     @Override
-    public int selectCook(String username, String password) {
+    public CookDTO selectCook(String username, String password) {
         if (Strings.isEmpty(username) || Strings.isEmpty(password)) {
-            return 0;
+            return null;
         }
-        return cookDao.selectCook(username, password);
+        CookEntity cookEntity = cookDao.selectCook(username, password);
+        if (cookEntity == null) {
+            return null;
+        }
+        CookDTO cookDTO = new CookDTO();
+        BeanUtils.copyProperties(cookEntity, cookDTO);
+        return cookDTO;
+    }
+
+    @Override
+    public CookDTO selectCookById(int id) {
+        if (id < 1) {
+            return null;
+        }
+        CookEntity cookEntity = cookDao.selectCookById(id);
+        if (cookEntity == null) {
+            return null;
+        }
+        CookDTO cookDTO = new CookDTO();
+        BeanUtils.copyProperties(cookEntity, cookDTO);
+        return cookDTO;
     }
 
     @Override
@@ -69,6 +96,6 @@ public class CookServiceImpl implements CookService {
         if (id < 1 || status != CookStatus.REST && status != CookStatus.WORK) {
             return 0;
         }
-        return cookDao.updateStatusById(id,status);
+        return cookDao.updateStatusById(id, status);
     }
 }

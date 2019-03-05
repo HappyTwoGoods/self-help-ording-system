@@ -43,24 +43,13 @@ public class BillDetailServiceImpl implements BillDetailService {
         return billDetailDao.updateDetailStatusById(id, status);
     }
 
-    @Override
-    public List<BillDetailDTO> selectDetailByGoodsIds(List<Integer> goodsIds) {
-        if (CollectionUtils.isEmpty(goodsIds)) {
-            return new ArrayList<>();
-        }
-        List<BillDetailEntity> billDetailEntities = billDetailDao.selectDetailByGoodsIds(goodsIds);
-        if(CollectionUtils.isEmpty(billDetailEntities)){
-            return new ArrayList<>();
-        }
-        return BeansListUtils.copyListProperties(billDetailEntities, BillDetailDTO.class);
-    }
 
     @Override
-    public List<BillDetailDTO> selectOrderByGoodsIds(List<Integer> goodsIds) {
+    public List<BillDetailDTO> selectOrderByGoodsIds(List<Integer> goodsIds,Integer status) {
         if (CollectionUtils.isEmpty(goodsIds)) {
             return new ArrayList<>();
         }
-        List<BillDetailEntity> billDetailEntities = billDetailDao.selectOrderByGoodsIds(goodsIds);
+        List<BillDetailEntity> billDetailEntities = billDetailDao.selectOrderByGoodsIds(goodsIds,status);
         if(CollectionUtils.isEmpty(billDetailEntities)){
             return new ArrayList<>();
         }

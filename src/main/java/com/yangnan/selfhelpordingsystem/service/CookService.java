@@ -47,14 +47,22 @@ public interface CookService {
      * @param password
      * @return
      */
-    int selectCook(String username, String password);
+    CookDTO selectCook(String username, String password);
+
+    /**
+     * 根据id查厨师
+     * @param id
+     * @return
+     */
+    CookDTO selectCookById(int id);
 
     /**
      * 根据厨师的id修改
+     *
      * @param id
      * @param status
      * @return
      */
-    int updateStatusById(int id,int status);
+    int updateStatusById(int id, int status);
 
 }

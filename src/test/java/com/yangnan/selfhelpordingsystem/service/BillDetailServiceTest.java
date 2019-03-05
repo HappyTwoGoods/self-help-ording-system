@@ -41,10 +41,11 @@ public class BillDetailServiceTest {
     public void selectByGoodsIdsTest() {
         ArrayList<Integer> goodsIds = new ArrayList<>();
         goodsIds.add(1);
-        goodsIds.add(2);
-        List<BillDetailDTO> billDetailDTOS = billDetailService.selectDetailByGoodsIds(goodsIds);
+        goodsIds.add(4);
+        List<BillDetailDTO> billDetailDTOS = billDetailService.selectOrderByGoodsIds(goodsIds,null);
+        System.out.println(billDetailDTOS);
         Assert.assertNotNull(billDetailDTOS);
-        Assert.assertEquals(billDetailDTOS.size(), 1);
+        Assert.assertEquals(billDetailDTOS.size(), 2);
     }
 
     @Test

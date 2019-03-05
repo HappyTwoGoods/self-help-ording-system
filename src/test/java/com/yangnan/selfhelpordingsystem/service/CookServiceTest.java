@@ -43,7 +43,7 @@ public class CookServiceTest {
 
     @Test
     public void queryTest() {
-        List<CookDTO> cookEntityList = cookService.queryCookInfo(null, null, 0);
+        List<CookDTO> cookEntityList = cookService.queryCookInfo("海瑞", null, 0);
         System.out.println(cookEntityList);
     }
 

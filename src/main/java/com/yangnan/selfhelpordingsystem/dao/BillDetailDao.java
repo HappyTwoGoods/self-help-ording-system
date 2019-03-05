@@ -25,20 +25,13 @@ public interface BillDetailDao {
                                @Param("status") int status);
 
     /**
-     * 根据商品id查询订单
+     * 根据商品id和状态动态查订单
      *
      * @param goodsIds
+     * @param status
      * @return
      */
-    List<BillDetailEntity> selectDetailByGoodsIds(@Param("goodsIds") List<Integer> goodsIds);
-
-    /**
-     * 根据商品id查询已下单的未接单的订单
-     *
-     * @param goodsIds
-     * @return
-     */
-    List<BillDetailEntity> selectOrderByGoodsIds(@Param("goodsIds") List<Integer> goodsIds);
+    List<BillDetailEntity> selectOrderByGoodsIds(@Param("goodsIds") List<Integer> goodsIds, @Param("status") Integer status);
 
     /**
      * 根据账单id查订单
@@ -58,6 +51,7 @@ public interface BillDetailDao {
 
     /**
      * 根据id查订单
+     *
      * @param id
      * @return
      */

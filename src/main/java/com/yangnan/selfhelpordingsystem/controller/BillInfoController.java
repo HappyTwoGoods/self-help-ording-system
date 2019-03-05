@@ -34,14 +34,14 @@ public class BillInfoController {
             return CommonResult.fail(404, "你还没有任何可以做的菜");
         }
         List<Integer> goodsIds = goodsDTOS.stream().map(GoodsDTO::getId).collect(Collectors.toList());
-        List<BillDetailDTO> billDetailDTOS = billDetailService.selectOrderByGoodsIds(goodsIds);
+        List<BillDetailDTO> billDetailDTOS = billDetailService.selectOrderByGoodsIds(goodsIds,BillDetailStatus.CONCONFIRM);
         if (CollectionUtils.isEmpty(billDetailDTOS)) {
             return CommonResult.fail(404, "没有下单商品");
         }
         return CommonResult.success(billDetailDTOS);
     }
 
-    @GetMapping("/cook/OrderStatus")
+    @GetMapping("/cook/changeOrderStatus")
     public CommonResult changeOrderStatus(Integer cookId, Integer orderId) {
         if (cookId == null || cookId < 0 || orderId == null || orderId < 0) {
             return CommonResult.fail(403, "参数错误");

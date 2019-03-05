@@ -36,26 +36,25 @@
         where id = #{id}
     </update>
 
-    <select id="selectDetailByGoodsIds" parameterType="java.util.List" resultMap="BillDetail">
+    <select id="selectOrderByGoodsIds" parameterType="map" resultMap="BillDetail">
         select
         <include refid="allField"/>
         from bill_detail
-        where goods_id in
+        where
+        <if test="status!=null">
+           bill_detail_status=#{status} and
+        </if>
+        goods_id in
         <foreach collection="goodsIds" item="goodId" separator="," open="(" close=")">
             #{goodId}
         </foreach>
-        order by update_time desc
-    </select>
+        <if test="status!=null and status==1">
+            order by update_time asc
+        </if>
+        <if test="status==null or status!=1">
+            order by update_time desc
+        </if>
 
-    <select id="selectOrderByGoodsIds" parameterType="java.util.List" resultMap="BillDetail">
-        select
-        <include refid="allField"/>
-        from bill_detail
-        where bill_detail_status=1 and goods_id in
-        <foreach collection="goodsIds" item="goodId" separator="," open="(" close=")">
-            #{goodId}
-        </foreach>
-        order by update_time asc
     </select>
 
     <select id="selectDetailByBillId" parameterType="java.lang.Integer" resultMap="BillDetail">
