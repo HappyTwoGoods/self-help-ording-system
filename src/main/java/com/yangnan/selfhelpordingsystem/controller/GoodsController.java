@@ -2,6 +2,7 @@ package com.yangnan.selfhelpordingsystem.controller;
 
 import com.yangnan.selfhelpordingsystem.common.CommonResult;
 import com.yangnan.selfhelpordingsystem.constant.GoodsType;
+import com.yangnan.selfhelpordingsystem.constant.SessionParameters;
 import com.yangnan.selfhelpordingsystem.dto.GoodsDTO;
 import com.yangnan.selfhelpordingsystem.service.GoodsService;
 import org.springframework.util.CollectionUtils;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -21,7 +24,9 @@ public class GoodsController {
     private GoodsService goodsService;
 
     @GetMapping("/cook/select/goods")
-    public CommonResult queryGoods(Integer cookId) {
+    public CommonResult queryGoods(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Integer cookId = (Integer) session.getAttribute(SessionParameters.COOKID);
         if (cookId == null || cookId < 1) {
             return CommonResult.fail(403, "参数错误");
         }
@@ -33,7 +38,9 @@ public class GoodsController {
     }
 
     @GetMapping("/cook/delete/goods")
-    public CommonResult deleteGoods(Integer cookId, Integer goodsId) {
+    public CommonResult deleteGoods(HttpServletRequest request, Integer goodsId) {
+        HttpSession session = request.getSession();
+        Integer cookId = (Integer) session.getAttribute(SessionParameters.COOKID);
         if (cookId == null || cookId < 1 || goodsId == null || goodsId < 1) {
             return CommonResult.fail(403, "参数错误");
         }
@@ -50,7 +57,7 @@ public class GoodsController {
     }
 
     @GetMapping("/cook/updateGoods")
-    public CommonResult updateGoods(Integer goodsId, Integer cookId,
+    public CommonResult updateGoods(Integer goodsId, HttpServletRequest request,
                                     @RequestParam(required = false, defaultValue = "") String goodsName,
                                     @RequestParam(required = false, defaultValue = "") Integer type,
                                     @RequestParam(required = false, defaultValue = "") BigDecimal price,
@@ -59,6 +66,8 @@ public class GoodsController {
                                     @RequestParam(required = false, defaultValue = "") String image,
                                     @RequestParam(required = false, defaultValue = "") Integer num,
                                     @RequestParam(required = false, defaultValue = "") String describe) {
+        HttpSession session = request.getSession();
+        Integer cookId = (Integer) session.getAttribute(SessionParameters.COOKID);
         if (goodsId == null || cookId == null || goodsId < 1 || cookId < 1) {
             return CommonResult.fail(403, "参数错误");
         }
@@ -85,9 +94,11 @@ public class GoodsController {
     }
 
     @GetMapping("/cook/addGoods")
-    public CommonResult addGoods(String goodsName, Integer type, Integer cookId,
+    public CommonResult addGoods(String goodsName, Integer type, HttpServletRequest request,
                                  BigDecimal price, Integer discount, Integer limit,
                                  String image, Integer num, String describe) {
+        HttpSession session = request.getSession();
+        Integer cookId = (Integer) session.getAttribute(SessionParameters.COOKID);
         if (StringUtils.isEmpty(goodsName) ||
                 type == null || type < GoodsType.STAPLE_FOOD || type > GoodsType.BARBECUE ||
                 cookId == null || cookId < 1 ||
