@@ -2,16 +2,17 @@ package com.yangnan.selfhelpordingsystem.controller;
 
 import com.yangnan.selfhelpordingsystem.common.CommonResult;
 import com.yangnan.selfhelpordingsystem.constant.BillDetailStatus;
-import com.yangnan.selfhelpordingsystem.constant.SessionParameters;
-import com.yangnan.selfhelpordingsystem.dto.*;
-import com.yangnan.selfhelpordingsystem.service.*;
 import com.yangnan.selfhelpordingsystem.constant.BillStatus;
+import com.yangnan.selfhelpordingsystem.constant.SessionParameters;
+import com.yangnan.selfhelpordingsystem.dto.BillDTO;
 import com.yangnan.selfhelpordingsystem.dto.BillDetailDTO;
+import com.yangnan.selfhelpordingsystem.dto.GoodsDTO;
+import com.yangnan.selfhelpordingsystem.dto.UserAccountDTO;
 import com.yangnan.selfhelpordingsystem.service.BillDetailService;
-import com.yangnan.selfhelpordingsystem.util.UserInfoUtil;
+import com.yangnan.selfhelpordingsystem.service.Billservice;
+import com.yangnan.selfhelpordingsystem.service.GoodsService;
+import com.yangnan.selfhelpordingsystem.service.UserAccountService;
 import lombok.Data;
-import org.apache.catalina.User;
-import org.apache.ibatis.javassist.CodeConverter;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +21,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -90,14 +90,15 @@ public class BillInfoController {
      * @return
      */
     @GetMapping("/user/getOrder")
-    public CommonResult getOrder(BillDetail ...billDetails){
-        if (billDetails.length <= 0){
-            return CommonResult.fail(403,"参数错误！");
+    public CommonResult getOrder(HttpServletRequest request, BillDetail... billDetails) {
+        HttpSession session = request.getSession();
+        if (billDetails.length <= 0) {
+            return CommonResult.fail(403, "参数错误！");
         }
         BillDTO billDTO = new BillDTO();
-        Integer userId = UserInfoUtil.getUserId();
+        Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
         BigDecimal priceSum = new BigDecimal(0.00);
-        for (BillDetail billDetail: billDetails) {
+        for (BillDetail billDetail : billDetails) {
             BigDecimal price = billDetail.getPrice();
             int mun = billDetail.getNum();
             priceSum = priceSum.add(price.multiply(BigDecimal.valueOf(mun)));
@@ -106,8 +107,8 @@ public class BillInfoController {
         billDTO.setStatus(BillStatus.CONFIRM);
         billDTO.setUserId(userId);
         int billId = billservice.insertBill(billDTO);
-        if (billId >= 0){
-            return CommonResult.fail(500,"添加订单失败！");
+        if (billId >= 0) {
+            return CommonResult.fail(500, "添加订单失败！");
         }
         BillDetailDTO billDetailDTO = new BillDetailDTO();
         for (BillDetail billDetail : billDetails) {
@@ -117,8 +118,8 @@ public class BillInfoController {
             billDetailDTO.setStatus(BillDetailStatus.CONCONFIRM);
             billDetailDTO.setBillId(billId);
             int data = billDetailService.addBillDetail(billDetailDTO);
-            if (data >= 0){
-                return CommonResult.fail(500,"添加菜品失败！");
+            if (data >= 0) {
+                return CommonResult.fail(500, "添加菜品失败！");
             }
         }
         return CommonResult.success();
@@ -131,22 +132,23 @@ public class BillInfoController {
      * @return
      */
     @GetMapping("/user/add/goods")
-    public CommonResult addGoods(BillDetail ...billDetails){
-        if (billDetails.length <= 0){
-            return CommonResult.fail(403,"参数错误！");
+    public CommonResult addGoods(HttpServletRequest request, BillDetail... billDetails) {
+        HttpSession session = request.getSession();
+        if (billDetails.length <= 0) {
+            return CommonResult.fail(403, "参数错误！");
         }
-        Integer userId = UserInfoUtil.getUserId();
-        int billId = billservice.queryBillId(userId,BillStatus.CONFIRM);
-        if (billId <= 0){
-            return CommonResult.fail(404,"没有相应的订单号！");
+        Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
+        int billId = billservice.queryBillId(userId, BillStatus.CONFIRM);
+        if (billId <= 0) {
+            return CommonResult.fail(404, "没有相应的订单号！");
         }
         BigDecimal priceSum = new BigDecimal(0.00);
-        for (BillDetail billDetail: billDetails) {
+        for (BillDetail billDetail : billDetails) {
             BigDecimal price = billDetail.getPrice();
             int mun = billDetail.getNum();
             priceSum = priceSum.add(price.multiply(BigDecimal.valueOf(mun)));
         }
-        billservice.updatePrice(priceSum,billId,BillStatus.CONFIRM);
+        billservice.updatePrice(priceSum, billId, BillStatus.CONFIRM);
         BillDetailDTO billDetailDTO = new BillDetailDTO();
         for (BillDetail billDetail : billDetails) {
             billDetailDTO.setBillId(billId);
@@ -155,8 +157,8 @@ public class BillInfoController {
             billDetailDTO.setNum(billDetail.getNum());
             billDetailDTO.setStatus(BillDetailStatus.CONCONFIRM);
             int data = billDetailService.addBillDetail(billDetailDTO);
-            if (data <= 0){
-                return CommonResult.fail(500,"添加菜品失败！");
+            if (data <= 0) {
+                return CommonResult.fail(500, "添加菜品失败！");
             }
         }
 
@@ -169,11 +171,12 @@ public class BillInfoController {
      * @return
      */
     @GetMapping("/user/query/myBill")
-    public CommonResult queryBill(){
-        Integer userId = UserInfoUtil.getUserId();
-        int billId = billservice.queryBillId(userId,BillStatus.CONFIRM);
-        if (billId <= 0){
-            return CommonResult.fail(404,"没有相应的订单号！");
+    public CommonResult queryBill(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
+        int billId = billservice.queryBillId(userId, BillStatus.CONFIRM);
+        if (billId <= 0) {
+            return CommonResult.fail(404, "没有相应的订单号！");
         }
         List<BillDetailDTO> billDetailDTOList = billDetailService.selectDetailByBillId(billId);
         return CommonResult.success(billDetailDTOList);
@@ -186,13 +189,15 @@ public class BillInfoController {
      * @return
      */
     @GetMapping("/user/select/states")
-    public CommonResult selectByStates(Integer states){
-        if (states <= 0){
-            return CommonResult.fail(403,"参数错误！");
+    public CommonResult selectByStates(HttpServletRequest request, Integer states) {
+        HttpSession session = request.getSession();
+        Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
+        if (states <= 0) {
+            return CommonResult.fail(403, "参数错误！");
         }
         List<BillDetailDTO> billDetailDTOList = billDetailService.selectDetailByStatus(states);
-        if (CollectionUtils.isEmpty(billDetailDTOList)){
-            return CommonResult.fail(404,"没有相关资源");
+        if (CollectionUtils.isEmpty(billDetailDTOList)) {
+            return CommonResult.fail(404, "没有相关资源");
         }
         return CommonResult.success(billDetailDTOList);
     }
@@ -204,24 +209,25 @@ public class BillInfoController {
      * @return
      */
     @GetMapping("/user/settle/accounts")
-    public CommonResult settleAccounts(String userPassword){
-        Integer userId = UserInfoUtil.getUserId();
-        Integer billId = billservice.queryBillId(userId,BillStatus.CONFIRM);
-        if (billId <= 0){
+    public CommonResult settleAccounts(String userPassword, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
+        Integer billId = billservice.queryBillId(userId, BillStatus.CONFIRM);
+        if (billId <= 0) {
             return CommonResult.success();
         }
         BillDTO billDTO = billservice.selectBillById(billId);
-        if (billDTO == null){
-            return CommonResult.fail(404,"没有相应订单信息！");
+        if (billDTO == null) {
+            return CommonResult.fail(404, "没有相应订单信息！");
         }
         BigDecimal price = billDTO.getPrice();
         UserAccountDTO userAccountDTO = userAccountService.queryBuId(userId);
         BigDecimal userPrice = userAccountDTO.getPrice();
-        int data = userAccountService.updatePrice(userPrice.subtract(price),userId,userPassword);
-        if (data <= 0){
-            return CommonResult.fail(500,"扣除用户余额失败！");
+        int data = userAccountService.updatePrice(userPrice.subtract(price), userId, userPassword);
+        if (data <= 0) {
+            return CommonResult.fail(500, "扣除用户余额失败！");
         }
-        billservice.updatePrice(BigDecimal.ZERO,billId,BillStatus.PAYED);
+        billservice.updatePrice(BigDecimal.ZERO, billId, BillStatus.PAYED);
         return CommonResult.success();
     }
 
@@ -232,13 +238,13 @@ public class BillInfoController {
      * @return
      */
     @GetMapping("/user/cancel/order")
-    public CommonResult cancelOrder(int billDetailId){
-        if (billDetailId <= 0){
-            return CommonResult.fail(403,"参数错误!");
+    public CommonResult cancelOrder(int billDetailId) {
+        if (billDetailId <= 0) {
+            return CommonResult.fail(403, "参数错误!");
         }
-        int data = billDetailService.updateDetailStatusById(billDetailId,BillDetailStatus.CANCEL);
-        if (data <= 0){
-            return CommonResult.fail(500,"取消订单失败！");
+        int data = billDetailService.updateDetailStatusById(billDetailId, BillDetailStatus.CANCEL);
+        if (data <= 0) {
+            return CommonResult.fail(500, "取消订单失败！");
         }
         return CommonResult.success();
     }
@@ -247,7 +253,7 @@ public class BillInfoController {
      * 详情实体类
      */
     @Data
-    private class BillDetail{
+    private class BillDetail {
 
         private Integer goodsId;
 
@@ -255,7 +261,6 @@ public class BillInfoController {
 
         private Integer num;
     }
-
 
 
 }

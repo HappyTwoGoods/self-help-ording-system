@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -21,14 +22,16 @@ public class BillDetailServiceTest {
 
     @Test
     public void addBillDetailServiceTest() {
-        BillDetailDTO billDetailDTO = new BillDetailDTO();
-        billDetailDTO.setBillId(1);
-        billDetailDTO.setGoodsId(1);
-        billDetailDTO.setStatus(1);
-        billDetailDTO.setPrice(BigDecimal.valueOf(40));
-        billDetailDTO.setNum(3);
-        int i = billDetailService.addBillDetail(billDetailDTO);
-        Assert.assertEquals(1, i);
+        for(int i=0;i<10;i++) {
+            BillDetailDTO billDetailDTO = new BillDetailDTO();
+            Random random = new Random();
+            billDetailDTO.setBillId(random.nextInt(3)+1);
+            billDetailDTO.setGoodsId(random.nextInt(5)+1);
+            billDetailDTO.setStatus(1);
+            billDetailDTO.setPrice(BigDecimal.valueOf(40));
+            billDetailDTO.setNum(random.nextInt(3)+1);
+            billDetailService.addBillDetail(billDetailDTO);
+        }
     }
 
     @Test

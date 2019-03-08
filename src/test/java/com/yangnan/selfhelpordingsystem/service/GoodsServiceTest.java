@@ -21,9 +21,9 @@ public class GoodsServiceTest {
     @Test
     public void insertGoodsTest() {
         GoodsDTO goodsDTO = new GoodsDTO();
-        goodsDTO.setName("宫保海瑞");
+        goodsDTO.setName("孜然海瑞");
         goodsDTO.setDescribe("好吃不贵");
-        goodsDTO.setCookId(2);
+        goodsDTO.setCookId(1);
         goodsDTO.setImage("a");
         goodsDTO.setLimit(10);
         goodsDTO.setPrice(BigDecimal.valueOf(90));
