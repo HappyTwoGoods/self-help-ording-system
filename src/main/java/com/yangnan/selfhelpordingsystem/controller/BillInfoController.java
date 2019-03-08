@@ -2,6 +2,7 @@ package com.yangnan.selfhelpordingsystem.controller;
 
 import com.yangnan.selfhelpordingsystem.common.CommonResult;
 import com.yangnan.selfhelpordingsystem.constant.BillDetailStatus;
+import com.yangnan.selfhelpordingsystem.constant.SessionParameters;
 import com.yangnan.selfhelpordingsystem.dto.*;
 import com.yangnan.selfhelpordingsystem.service.*;
 import com.yangnan.selfhelpordingsystem.constant.BillStatus;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +37,9 @@ public class BillInfoController {
     private UserAccountService userAccountService;
 
     @GetMapping("/cook/selectNewOrder")
-    public CommonResult selectNewOrder(Integer cookId) {
+    public CommonResult selectNewOrder(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Integer cookId = (Integer) session.getAttribute(SessionParameters.COOKID);
         if (cookId == null || cookId < 1) {
             return CommonResult.fail(403, "参数错误");
         }
@@ -43,7 +48,7 @@ public class BillInfoController {
             return CommonResult.fail(404, "你还没有任何可以做的菜");
         }
         List<Integer> goodsIds = goodsDTOS.stream().map(GoodsDTO::getId).collect(Collectors.toList());
-        List<BillDetailDTO> billDetailDTOS = billDetailService.selectOrderByGoodsIds(goodsIds,BillDetailStatus.CONCONFIRM);
+        List<BillDetailDTO> billDetailDTOS = billDetailService.selectOrderByGoodsIds(goodsIds, BillDetailStatus.CONCONFIRM);
         if (CollectionUtils.isEmpty(billDetailDTOS)) {
             return CommonResult.fail(404, "没有下单商品");
         }
@@ -51,7 +56,9 @@ public class BillInfoController {
     }
 
     @GetMapping("/cook/changeOrderStatus")
-    public CommonResult changeOrderStatus(Integer cookId, Integer orderId) {
+    public CommonResult changeOrderStatus(Integer orderId, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Integer cookId = (Integer) session.getAttribute(SessionParameters.COOKID);
         if (cookId == null || cookId < 0 || orderId == null || orderId < 0) {
             return CommonResult.fail(403, "参数错误");
         }
