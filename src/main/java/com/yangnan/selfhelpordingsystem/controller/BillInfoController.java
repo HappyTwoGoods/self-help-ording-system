@@ -185,6 +185,7 @@ public class BillInfoController {
     /**
      * 根据状态查找已下单菜品
      *
+     * @param request
      * @param states
      * @return
      */
@@ -192,10 +193,11 @@ public class BillInfoController {
     public CommonResult selectByStates(HttpServletRequest request, Integer states) {
         HttpSession session = request.getSession();
         Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
+        Integer billId = billservice.queryBillId(userId,BillStatus.CONFIRM);
         if (states <= 0) {
             return CommonResult.fail(403, "参数错误！");
         }
-        List<BillDetailDTO> billDetailDTOList = billDetailService.selectDetailByStatus(states);
+        List<BillDetailDTO> billDetailDTOList = billDetailService.selectDetailByStatus(states,billId);
         if (CollectionUtils.isEmpty(billDetailDTOList)) {
             return CommonResult.fail(404, "没有相关资源");
         }
@@ -223,6 +225,10 @@ public class BillInfoController {
         BigDecimal price = billDTO.getPrice();
         UserAccountDTO userAccountDTO = userAccountService.queryBuId(userId);
         BigDecimal userPrice = userAccountDTO.getPrice();
+        String myPassword = userAccountDTO.getPassword();
+        if (!myPassword.equals(userPassword)){
+            return CommonResult.fail(403,"密码错误！");
+        }
         int data = userAccountService.updatePrice(userPrice.subtract(price), userId, userPassword);
         if (data <= 0) {
             return CommonResult.fail(500, "扣除用户余额失败！");
@@ -238,7 +244,9 @@ public class BillInfoController {
      * @return
      */
     @GetMapping("/user/cancel/order")
-    public CommonResult cancelOrder(int billDetailId) {
+    public CommonResult cancelOrder(int billDetailId, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
         if (billDetailId <= 0) {
             return CommonResult.fail(403, "参数错误!");
         }
@@ -246,6 +254,13 @@ public class BillInfoController {
         if (data <= 0) {
             return CommonResult.fail(500, "取消订单失败！");
         }
+        int billId = billservice.queryBillId(userId,BillStatus.CONFIRM);
+        BillDTO billDTO = billservice.selectBillById(billId);
+        BigDecimal billPrice = billDTO.getPrice();
+        BillDetailDTO billDetailDTO = billDetailService.selectDetailById(billDetailId);
+        BigDecimal billDetailPrice = billDetailDTO.getPrice();
+        BigDecimal price = billPrice.subtract(billDetailPrice);
+        billservice.updatePrice(price,billId,BillStatus.CANCEL);
         return CommonResult.success();
     }
 

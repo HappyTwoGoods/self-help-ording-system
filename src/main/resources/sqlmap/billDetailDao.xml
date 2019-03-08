@@ -70,6 +70,7 @@
         <include refid="allField"/>
         from bill_detail
         where bill_detail_status=#{status}
+        AND bill_id = #{billId}
         order by update_time asc
     </select>
 

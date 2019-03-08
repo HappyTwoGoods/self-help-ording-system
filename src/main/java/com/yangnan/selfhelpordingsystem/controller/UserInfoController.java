@@ -5,6 +5,7 @@ import com.yangnan.selfhelpordingsystem.constant.SessionParameters;
 import com.yangnan.selfhelpordingsystem.dto.UserAccountDTO;
 import com.yangnan.selfhelpordingsystem.service.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -63,5 +64,30 @@ public class UserInfoController {
             return CommonResult.fail("注册失败！");
         }
         return CommonResult.success("注册成功");
+    }
+
+    /**
+     * 账户充值
+     *
+     * @param addPrice
+     * @param password
+     * @param request
+     * @return
+     */
+    @GetMapping("/user/add/price")
+    public CommonResult addPrice(BigDecimal addPrice,String password, HttpServletRequest request){
+        HttpSession session = request.getSession();
+        Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
+        UserAccountDTO userAccountDTO = userAccountService.queryBuId(userId);
+        BigDecimal price = userAccountDTO.getPrice();
+        String myPassword = userAccountDTO.getPassword();
+        if (!myPassword.equals(password)){
+            return CommonResult.fail(403,"密码不正确！");
+        }
+        int data = userAccountService.updatePrice(price.add(addPrice),userId,password);
+        if (data <= 0){
+            return CommonResult.fail(500,"充值失败!");
+        }
+        return CommonResult.success();
     }
 }

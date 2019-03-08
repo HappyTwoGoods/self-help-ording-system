@@ -70,11 +70,11 @@ public class BillDetailServiceImpl implements BillDetailService {
     }
 
     @Override
-    public List<BillDetailDTO> selectDetailByStatus(int status) {
+    public List<BillDetailDTO> selectDetailByStatus(int status,int billId) {
         if (status < BillDetailStatus.CANCEL || status > BillDetailStatus.PRODUCED) {
             return new ArrayList<>();
         }
-        List<BillDetailEntity> billDetailEntities = billDetailDao.selectDetailByStatus(status);
+        List<BillDetailEntity> billDetailEntities = billDetailDao.selectDetailByStatus(status,billId);
         if(CollectionUtils.isEmpty(billDetailEntities)){
             return new ArrayList<>();
         }
