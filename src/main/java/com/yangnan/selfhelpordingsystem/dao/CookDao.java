@@ -1,5 +1,6 @@
 package com.yangnan.selfhelpordingsystem.dao;
 
+import com.yangnan.selfhelpordingsystem.constant.CookStatus;
 import com.yangnan.selfhelpordingsystem.entity.CookEntity;
 import org.apache.ibatis.annotations.Param;
 
@@ -42,4 +43,28 @@ public interface CookDao {
     List<CookEntity> queryCookInfo(@Param("cookName") String cookName,
                                    @Param("telephone") String telephone,
                                    @Param("cookStatus") Integer cookStatus);
+
+    /**
+     * 根据用户名和密码查厨师
+     * @param name
+     * @param password
+     * @return
+     */
+    CookEntity selectCook(@Param("username") String name,
+                   @Param("password") String password);
+
+    /**
+     * 根据厨师id查厨师
+     * @param id
+     * @return
+     */
+    CookEntity selectCookById(@Param("id") int id);
+    /**
+     * 根据厨师id修改厨师的状态
+     * @param id
+     * @param status
+     * @return
+     */
+    int updateStatusById(@Param("id") int id,
+                         @Param("status") int status);
 }

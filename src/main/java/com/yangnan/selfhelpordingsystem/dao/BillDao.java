@@ -1,8 +1,10 @@
 package com.yangnan.selfhelpordingsystem.dao;
 
+import com.yangnan.selfhelpordingsystem.dto.BillDTO;
 import com.yangnan.selfhelpordingsystem.entity.BillEntity;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface BillDao {
@@ -47,5 +49,25 @@ public interface BillDao {
      * @return
      */
     List<BillEntity> selectBillByStatus(@Param("status") int status);
+
+    /**
+     * 继续下单
+     *
+     * @param userId
+     * @param billState
+     * @return
+     */
+    int queryBillId(@Param("userId") int userId,
+                    @Param("billState") int billState);
+
+    /**
+     * 根据Id修改价格
+     *
+     * @param billId
+     * @return
+     */
+    BillEntity updatePrice(@Param("price")BigDecimal price,
+                           @Param("billId") int billId,
+                           @Param("billState") int billState);
 }
 

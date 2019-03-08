@@ -1,9 +1,6 @@
 package com.yangnan.selfhelpordingsystem.service;
 
 import com.yangnan.selfhelpordingsystem.dto.GoodsDTO;
-import com.yangnan.selfhelpordingsystem.entity.GoodsEntity;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,7 +12,7 @@ public interface GoodsService {
      * @param goodsDTO
      * @return
      */
-    int insertGoods(@Param("goods") GoodsDTO goodsDTO);
+    int insertGoods(GoodsDTO goodsDTO);
 
     /**
      * 更改菜
@@ -23,7 +20,7 @@ public interface GoodsService {
      * @param goodsDTO
      * @return
      */
-    int updateGoodsById(@Param("goods") GoodsDTO goodsDTO);
+    int updateGoodsById(GoodsDTO goodsDTO);
 
     /**
      * 更改菜的库存
@@ -32,8 +29,7 @@ public interface GoodsService {
      * @param num 减少量
      * @return
      */
-    int reduceGoodsNumById(@Param("id") int id,
-                           @Param("num") int num);
+    int reduceGoodsNumById(int id, int num);
 
     /**
      * 删除菜
@@ -41,7 +37,7 @@ public interface GoodsService {
      * @param id
      * @return
      */
-    int deleteGoodsById(@Param("id") int id);
+    int deleteGoodsById(int id);
 
     /**
      * 删除菜根据厨师id
@@ -49,7 +45,7 @@ public interface GoodsService {
      * @param cookId
      * @return
      */
-    int deleteGoodsByCookId(@Param("cookId") int cookId);
+    int deleteGoodsByCookId(int cookId);
 
     /**
      * 根据厨师的id查菜
@@ -57,7 +53,15 @@ public interface GoodsService {
      * @param cookIds
      * @return
      */
-    List<GoodsDTO> selectGoodsByCookIds(@Param("cookIds") List<Integer> cookIds);
+    List<GoodsDTO> selectGoodsByCookIds(List<Integer> cookIds);
+
+    /**
+     * 根据厨师的id查菜
+     *
+     * @param cookId
+     * @return
+     */
+    List<GoodsDTO> selectGoodsByCookId(int cookId);
 
     /**
      * 根据菜名模糊查菜
@@ -65,7 +69,7 @@ public interface GoodsService {
      * @param name
      * @return
      */
-    List<GoodsDTO> selectGoodsByName(@Param("name") String name);
+    List<GoodsDTO> selectGoodsByName(String name);
 
     /**
      * 根据id查菜
@@ -73,7 +77,7 @@ public interface GoodsService {
      * @param id
      * @return
      */
-    GoodsDTO selectGoodsById(@Param("id") int id);
+    GoodsDTO selectGoodsById(int id);
 
     /**
      * 动态查询商品信息

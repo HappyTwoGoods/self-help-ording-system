@@ -56,4 +56,20 @@
         </set>
         where id=#{user.id}
     </update>
+
+    <update id="updatePrice" parameterType="map">
+        UPDATE useraccount
+        SET
+        price = #{price}
+        WHERE id = #{userId}
+        AND user_password = #{userPassword}
+    </update>
+
+    <select id="queryBuId" parameterType="map" resultType="com.yangnan.selfhelpordingsystem.entity.UserAccountEntity">
+        SELECT
+        <include refid="allField"/>
+        FROM useraccount
+        WHERE
+        id = #{userId}
+    </select>
 </mapper>

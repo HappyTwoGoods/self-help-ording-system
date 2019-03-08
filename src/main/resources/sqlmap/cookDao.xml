@@ -25,10 +25,12 @@
 
     <insert id="insertCooker" parameterType="map" useGeneratedKeys="true" keyProperty="cookInfo.id">
         INSERT INTO
-        cook(cook_name, telephone, cook_status, add_time, update_time)
+        cook(cook_name, telephone, nickname, cook_password, cook_status, add_time, update_time)
         VALUES (
         #{cookInfo.cookName},
         #{cookInfo.telephone},
+        #{cookInfo.nickname},
+        #{cookInfo.cookPassword},
         #{cookInfo.cookStatus},
         NOW(),
         NOW()
@@ -44,19 +46,19 @@
     <update id="updateCookInfo" parameterType="map">
         UPDATE cook
         <set>
-            <if test="cookInfo.cookName != null">
+            <if test="cookInfo.cookName != null and cookInfo.cookName!=''">
                 cook_name = #{cookInfo.cookName},
             </if>
-            <if test="cookInfo.telephone != null">
+            <if test="cookInfo.telephone != null and cookInfo.telephone != ''">
                 telephone = #{cookInfo.telephone},
             </if>
             <if test="cookInfo.cookStatus != null">
                 cook_status = #{cookInfo.cookStatus},
             </if>
-            <if test="cookInfo.nickname != null">
+            <if test="cookInfo.nickname != null and cookInfo.nickname != ''">
                 nickname = #{cookInfo.nickname},
             </if>
-            <if test="cookInfo.cookPassword != null">
+            <if test="cookInfo.cookPassword != null and cookInfo.cookPassword != ''">
                 cook_password = #{cookInfo.cookPassword}
             </if>
             update_time = NOW()
@@ -70,14 +72,35 @@
         FROM cook
         WHERE
         1=1
-        <if test="cookName != null">
+        <if test="cookName != null and cookName!=''">
             AND cook_name = #{cookName}
         </if>
-        <if test="telephone != null">
+        <if test="telephone != null and telephone!=''">
             AND telephone = #{telephone}
         </if>
         <if test="cookStatus != null">
             AND cook_status = #{cookStatus}
         </if>
     </select>
+
+    <select id="selectCook" parameterType="java.lang.String" resultMap="CookInfoMap">
+        select
+        <include refid="cookInfo"/>
+        from cook
+        where nickname=#{username} and cook_password=#{password}
+    </select>
+
+    <select id="selectCookById" parameterType="int" resultMap="CookInfoMap">
+        select
+        <include refid="cookInfo"/>
+        from cook
+        where id=#{id}
+    </select>
+
+    <update id="updateStatusById">
+        update cook
+        set cook_status=#{status},
+        update_time= NOW()
+        where id=#{id}
+    </update>
 </mapper>

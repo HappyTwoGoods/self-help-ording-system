@@ -48,7 +48,7 @@ public interface GoodsDao {
      * @param cookId
      * @return
      */
-    int deleteGoodsByCookId(@Param("cookId") int cookId);
+    int deleteGoodsByCookId(@Param("cookId")int cookId);
 
     /**
      * 根据厨师的id查菜
@@ -57,6 +57,14 @@ public interface GoodsDao {
      * @return
      */
     List<GoodsEntity> selectGoodsByCookIds(@Param("cookIds") List<Integer> cookIds);
+
+    /**
+     * 根据厨师的id查菜
+     *
+     * @param cookId
+     * @return
+     */
+    List<GoodsEntity> selectGoodsByCookId(@Param("cookId") int cookId);
 
     /**
      * 根据菜名模糊查菜
@@ -82,7 +90,7 @@ public interface GoodsDao {
      * @param discount
      * @return
      */
-    List<GoodsEntity> searchGoods(@Param("goodName")String goodName,
+    List<GoodsEntity> searchGoods(@Param("goodName") String goodName,
                                   @Param("goodType") Integer goodType,
                                   @Param("discount") Integer discount);
 
@@ -93,6 +101,6 @@ public interface GoodsDao {
      * @param endPrice
      * @return
      */
-    List<GoodsEntity> selectByPrice(@Param("startPrice")BigDecimal startPrice,
-                                    @Param("endPrice")BigDecimal endPrice);
+    List<GoodsEntity> selectByPrice(@Param("startPrice") BigDecimal startPrice,
+                                    @Param("endPrice") BigDecimal endPrice);
 }

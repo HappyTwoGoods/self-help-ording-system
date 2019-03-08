@@ -109,6 +109,13 @@
         and goods_num &gt; 0
     </select>
 
+    <select id="selectGoodsByCookId" resultMap="Goods">
+        select
+        <include refid="allField"/>
+        from goods
+        WHERE cook_id = #{cookId}
+    </select>
+
     <select id="selectGoodsByName" resultMap="Goods">
         select
         <include refid="allField"/>
@@ -122,8 +129,8 @@
         from goods
         where id=#{id}
     </select>
-    
-    <select id="searchGoods" parameterType="map" resultMap="Goods">
+
+    <select id="searchGoods" parameterType="int" resultMap="Goods">
         select
         <include refid="allField"/>
         FROM goods
@@ -143,6 +150,6 @@
         SELECT
         <include refid="allField"/>
         FROM goods
-        WHERE   #{startPrice} &lt; price AND price &lt; #{endPrice}
+        WHERE #{startPrice} &lt; price AND price &lt; #{endPrice}
     </select>
 </mapper>

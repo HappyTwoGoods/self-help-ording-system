@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.smartcardio.CommandAPDU;
 import java.math.BigDecimal;
 
 @Service
@@ -39,6 +40,9 @@ public class UserAccountServiceImpl implements UserAccountService {
             return new UserAccountDTO();
         }
         UserAccountEntity userAccountEntity = userAccountDao.selectUserAccount(name, password);
+        if (userAccountEntity == null) {
+            return new UserAccountDTO();
+        }
         UserAccountDTO userAccountDTO = new UserAccountDTO();
         BeanUtils.copyProperties(userAccountEntity, userAccountDTO);
         return userAccountDTO;
@@ -62,5 +66,24 @@ public class UserAccountServiceImpl implements UserAccountService {
         UserAccountEntity userAccountEntity = new UserAccountEntity();
         BeanUtils.copyProperties(userAccountDTO, userAccountEntity);
         return userAccountDao.updateUserNameOrPassword(userAccountEntity);
+    }
+
+    @Override
+    public int updatePrice(BigDecimal price, int userId, String userPassword) {
+        if (userId <= 0 && userPassword == null){
+            return 0;
+        }
+        return userAccountDao.updatePrice(price,userId,userPassword);
+    }
+
+    @Override
+    public UserAccountDTO queryBuId(int userId) {
+        if (userId <= 0){
+            return null;
+        }
+        UserAccountEntity userAccountEntity = userAccountDao.queryBuId(userId);
+        UserAccountDTO userAccountDTO = new UserAccountDTO();
+        BeanUtils.copyProperties(userAccountEntity,userAccountDTO);
+        return userAccountDTO;
     }
 }

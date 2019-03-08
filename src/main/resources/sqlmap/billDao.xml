@@ -62,5 +62,15 @@
         price = #{price},
         update_time = NOW()
         WHERE id = #{billId}
+        AND bill_status = #{billState}
     </update>
+
+    <select id="queryBillId" resultType="java.lang.Integer">
+        SELECT id
+        FROM bill
+        WHERE user_id = #{userId}
+        AND bill_status = #{billState}
+    </select>
+
+
 </mapper>

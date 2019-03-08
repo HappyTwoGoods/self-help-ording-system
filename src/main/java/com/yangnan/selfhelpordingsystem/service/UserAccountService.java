@@ -1,6 +1,7 @@
 package com.yangnan.selfhelpordingsystem.service;
 
 import com.yangnan.selfhelpordingsystem.dto.UserAccountDTO;
+import org.apache.catalina.User;
 
 import java.math.BigDecimal;
 
@@ -47,4 +48,22 @@ public interface UserAccountService {
      * @return
      */
     int updateUserNameOrPassword(UserAccountDTO userAccountDTO);
+
+    /**
+     * 结账
+     *
+     * @param price
+     * @param userId
+     * @param userPassword
+     * @return
+     */
+    int updatePrice(BigDecimal price, int userId, String userPassword);
+
+    /**
+     * 根据id查找用户
+     *
+     * @param userId
+     * @return
+     */
+    UserAccountDTO queryBuId(int userId);
 }

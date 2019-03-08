@@ -2,6 +2,7 @@ package com.yangnan.selfhelpordingsystem.service;
 
 import com.yangnan.selfhelpordingsystem.dto.BillDTO;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface Billservice {
@@ -45,4 +46,23 @@ public interface Billservice {
      * @return
      */
     List<BillDTO> selectBillByStatus(int status);
+
+    /**
+     * 继续下单
+     *
+     * @param userId
+     * @param billState
+     * @return
+     */
+    int queryBillId(int userId, int billState);
+
+    /**
+     * 根据Id修改价格
+     *
+     * @param price
+     * @param billId
+     * @param billState
+     * @return
+     */
+    BillDTO updatePrice(BigDecimal price,int billId, int billState);
 }

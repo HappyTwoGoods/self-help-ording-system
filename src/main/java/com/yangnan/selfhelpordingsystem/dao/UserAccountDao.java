@@ -1,5 +1,6 @@
 package com.yangnan.selfhelpordingsystem.dao;
 
+import com.yangnan.selfhelpordingsystem.dto.UserAccountDTO;
 import com.yangnan.selfhelpordingsystem.entity.UserAccountEntity;
 import org.apache.ibatis.annotations.Param;
 
@@ -63,4 +64,24 @@ public interface UserAccountDao {
      */
     BigDecimal selectPrice(@Param("id") int id,
                            @Param("password") String password);
+
+    /**
+     * 结账
+     *
+     * @param price
+     * @param userId
+     * @param userPassword
+     * @return
+     */
+    int updatePrice(@Param("price") BigDecimal price,
+                    @Param("userId") int userId,
+                    @Param("userPassword") String userPassword);
+
+    /**
+     * 根据id查找用户
+     *
+     * @param userId
+     * @return
+     */
+    UserAccountEntity queryBuId(@Param("userId") int userId);
 }

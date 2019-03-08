@@ -13,10 +13,8 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class GoodsServiceImpl implements GoodsService {
@@ -73,6 +71,21 @@ public class GoodsServiceImpl implements GoodsService {
             return new ArrayList<>();
         }
         List<GoodsEntity> goodsEntities = goodsDao.selectGoodsByCookIds(cookIds);
+        if (CollectionUtils.isEmpty(goodsEntities)) {
+            return new ArrayList<>();
+        }
+        return BeansListUtils.copyListProperties(goodsEntities, GoodsDTO.class);
+    }
+
+    @Override
+    public List<GoodsDTO> selectGoodsByCookId(int cookId) {
+        if (cookId < 1) {
+            return new ArrayList<>();
+        }
+        List<GoodsEntity> goodsEntities = goodsDao.selectGoodsByCookId(cookId);
+        if (CollectionUtils.isEmpty(goodsEntities)) {
+            return new ArrayList<>();
+        }
         return BeansListUtils.copyListProperties(goodsEntities, GoodsDTO.class);
     }
 
@@ -82,6 +95,9 @@ public class GoodsServiceImpl implements GoodsService {
             return new ArrayList<>();
         }
         List<GoodsEntity> goodsEntities = goodsDao.selectGoodsByName(name);
+        if (CollectionUtils.isEmpty(goodsEntities)) {
+            return new ArrayList<>();
+        }
         return BeansListUtils.copyListProperties(goodsEntities, GoodsDTO.class);
     }
 
@@ -91,6 +107,9 @@ public class GoodsServiceImpl implements GoodsService {
             return new GoodsDTO();
         }
         GoodsEntity goodsEntity = goodsDao.selectGoodsById(id);
+        if (goodsEntity == null) {
+            return null;
+        }
         GoodsDTO goodsDTO = new GoodsDTO();
         BeanUtils.copyProperties(goodsEntity, goodsDTO);
         return goodsDTO;
@@ -98,16 +117,22 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     public List<GoodsDTO> searchGoods(String goodName, Integer goodType, Integer discount) {
-        List<GoodsEntity> goodsEntities = goodsDao.searchGoods(goodName,goodType,discount);
+        List<GoodsEntity> goodsEntities = goodsDao.searchGoods(goodName, goodType, discount);
+        if (CollectionUtils.isEmpty(goodsEntities)) {
+            return new ArrayList<>();
+        }
         return BeansListUtils.copyListProperties(goodsEntities, GoodsDTO.class);
     }
 
     @Override
     public List<GoodsDTO> selectByPrice(BigDecimal startPrice, BigDecimal endPrice) {
-        if (startPrice.compareTo(endPrice) > 0){
+        if (startPrice.compareTo(endPrice) > 0) {
             return Collections.emptyList();
         }
-        List<GoodsEntity> goodsEntityList = goodsDao.selectByPrice(startPrice,endPrice);
+        List<GoodsEntity> goodsEntityList = goodsDao.selectByPrice(startPrice, endPrice);
+        if (CollectionUtils.isEmpty(goodsEntityList)) {
+            return new ArrayList<>();
+        }
         return BeansListUtils.copyListProperties(goodsEntityList, GoodsDTO.class);
     }
 }
