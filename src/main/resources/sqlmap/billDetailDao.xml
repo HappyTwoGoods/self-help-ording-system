@@ -48,10 +48,10 @@
         <foreach collection="goodsIds" item="goodId" separator="," open="(" close=")">
             #{goodId}
         </foreach>
-        <if test="status!=null and status==1">
+        <if test="status==1 or status==2">
             order by update_time asc
         </if>
-        <if test="status==null or status!=1">
+        <if test="status==null or status==0 or status==3">
             order by update_time desc
         </if>
 

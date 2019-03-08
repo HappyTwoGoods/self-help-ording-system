@@ -13,14 +13,18 @@ import com.yangnan.selfhelpordingsystem.service.Billservice;
 import com.yangnan.selfhelpordingsystem.service.GoodsService;
 import com.yangnan.selfhelpordingsystem.service.UserAccountService;
 import lombok.Data;
+import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,8 +40,9 @@ public class BillInfoController {
     @Resource
     private UserAccountService userAccountService;
 
-    @GetMapping("/cook/selectNewOrder")
-    public CommonResult selectNewOrder(HttpServletRequest request) {
+    @GetMapping("/cook/selectOrderByState")
+    public CommonResult selectNewOrder(HttpServletRequest request,
+                                       @RequestParam(required = false, defaultValue = "") Integer state) {
         HttpSession session = request.getSession();
         Integer cookId = (Integer) session.getAttribute(SessionParameters.COOKID);
         if (cookId == null || cookId < 1) {
@@ -48,11 +53,24 @@ public class BillInfoController {
             return CommonResult.fail(404, "你还没有任何可以做的菜");
         }
         List<Integer> goodsIds = goodsDTOS.stream().map(GoodsDTO::getId).collect(Collectors.toList());
-        List<BillDetailDTO> billDetailDTOS = billDetailService.selectOrderByGoodsIds(goodsIds, BillDetailStatus.CONCONFIRM);
+        List<BillDetailDTO> billDetailDTOS = billDetailService.selectOrderByGoodsIds(goodsIds, state);
         if (CollectionUtils.isEmpty(billDetailDTOS)) {
-            return CommonResult.fail(404, "没有下单商品");
+            return CommonResult.fail(404, "找不到数据");
         }
-        return CommonResult.success(billDetailDTOS);
+
+        return CommonResult.success(createBillDetail(billDetailDTOS));
+    }
+
+    @GetMapping("manager/select/billDetail")
+    public CommonResult selectBillDetail(Integer status) {
+        if (status == null || status < BillDetailStatus.CANCEL || status > BillDetailStatus.PRODUCED) {
+            return CommonResult.fail(403, "参数错误");
+        }
+        List<BillDetailDTO> billDetailDTOS = billDetailService.selectDetailByStatus(status);
+        if (CollectionUtils.isEmpty(billDetailDTOS)) {
+            return CommonResult.fail(404, "找不到资源");
+        }
+        return CommonResult.success(createBillDetail(billDetailDTOS));
     }
 
     @GetMapping("/cook/changeOrderStatus")
@@ -262,5 +280,27 @@ public class BillInfoController {
         private Integer num;
     }
 
+    private List<WebBillDetail> createBillDetail(List<BillDetailDTO> billDetailDTOS) {
+        if (CollectionUtils.isEmpty(billDetailDTOS)) {
+            return new ArrayList<>();
+        }
+        ArrayList<WebBillDetail> webBillDetails = new ArrayList<>();
+        for (BillDetailDTO billDetail : billDetailDTOS) {
+            WebBillDetail webBillDetail = new WebBillDetail();
+            BeanUtils.copyProperties(billDetail, webBillDetail);
+            webBillDetail.setGoodsName(goodsService.selectGoodsById(billDetail.getGoodsId()).getName());
+            webBillDetails.add(webBillDetail);
+        }
+        return webBillDetails;
+    }
+
+    @Data
+    private class WebBillDetail {
+        private Integer id;
+        private String goodsName;
+        private Integer num;
+        private Integer status;
+        private Date updateTime;
+    }
 
 }
