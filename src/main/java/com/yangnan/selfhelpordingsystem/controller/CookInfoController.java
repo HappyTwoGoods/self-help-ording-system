@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -135,7 +136,7 @@ public class CookInfoController {
         return CommonResult.success("删除成功");
     }
 
-    @GetMapping("/cook/login")
+    @PostMapping("cook/login")
     public CommonResult login(String username, String password, HttpServletRequest request) {
         if (Strings.isEmpty(username) || Strings.isEmpty(password)) {
             return CommonResult.fail(403, "参数错误");
@@ -150,7 +151,7 @@ public class CookInfoController {
             session.setAttribute(SessionParameters.PASSWORD, password);
             session.setAttribute(SessionParameters.COOKID, cookDTO.getId());
             cookService.updateStatusById(cookDTO.getId(), CookStatus.WORK);
-            return CommonResult.success();
+            return CommonResult.success().setMessage("登录成功");
         } catch (Exception e) {
             System.out.println("登录失败");
         }
