@@ -215,7 +215,7 @@ public class BillInfoController {
         if (states <= 0) {
             return CommonResult.fail(403, "参数错误！");
         }
-        List<BillDetailDTO> billDetailDTOList = billDetailService.selectDetailByStatus(states,billId);
+        List<BillDetailDTO> billDetailDTOList = billDetailService.selectUserDetailByState(states,billId);
         if (CollectionUtils.isEmpty(billDetailDTOList)) {
             return CommonResult.fail(404, "没有相关资源");
         }

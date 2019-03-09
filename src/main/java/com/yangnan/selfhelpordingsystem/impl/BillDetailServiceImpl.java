@@ -70,11 +70,23 @@ public class BillDetailServiceImpl implements BillDetailService {
     }
 
     @Override
-    public List<BillDetailDTO> selectDetailByStatus(int status,int billId) {
+    public List<BillDetailDTO> selectDetailByStatus(int status) {
         if (status < BillDetailStatus.CANCEL || status > BillDetailStatus.PRODUCED) {
             return new ArrayList<>();
         }
-        List<BillDetailEntity> billDetailEntities = billDetailDao.selectDetailByStatus(status,billId);
+        List<BillDetailEntity> billDetailEntities = billDetailDao.selectDetailByStatus(status);
+        if(CollectionUtils.isEmpty(billDetailEntities)){
+            return new ArrayList<>();
+        }
+        return BeansListUtils.copyListProperties(billDetailEntities, BillDetailDTO.class);
+    }
+
+    @Override
+    public List<BillDetailDTO> selectUserDetailByState(int state, int billId) {
+        if (state < BillDetailStatus.CANCEL || state > BillDetailStatus.PRODUCED || billId <= 0) {
+            return new ArrayList<>();
+        }
+        List<BillDetailEntity> billDetailEntities = billDetailDao.selectUserDetailByState(state,billId);
         if(CollectionUtils.isEmpty(billDetailEntities)){
             return new ArrayList<>();
         }
