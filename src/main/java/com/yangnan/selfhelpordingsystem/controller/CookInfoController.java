@@ -136,6 +136,17 @@ public class CookInfoController {
         return CommonResult.success("删除成功");
     }
 
+    @GetMapping("/Cook/selectCookById")
+    public CommonResult selectCookById(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Integer cookId = (Integer) session.getAttribute(SessionParameters.COOKID);
+        CookDTO cookDTO = cookService.selectCookById(cookId);
+        if (cookDTO == null) {
+            return CommonResult.fail(404, "找不到资源");
+        }
+        return CommonResult.success(cookDTO);
+    }
+
     @PostMapping("cook/login")
     public CommonResult login(String username, String password, HttpServletRequest request) {
         if (Strings.isEmpty(username) || Strings.isEmpty(password)) {
