@@ -11,6 +11,7 @@ import com.yangnan.selfhelpordingsystem.service.BillDetailService;
 import com.yangnan.selfhelpordingsystem.service.CookService;
 import com.yangnan.selfhelpordingsystem.service.GoodsService;
 import org.apache.logging.log4j.util.Strings;
+import org.checkerframework.checker.propkey.qual.PropertyKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -62,7 +63,7 @@ public class CookInfoController {
      * @param telephone
      * @return
      */
-    @GetMapping("/cook/update/cookInfo")
+    @PostMapping ("/cook/update/cookInfo")
     public CommonResult updateCookInfo(HttpServletRequest request,
                                        @RequestParam(required = false, defaultValue = "") String cookName,
                                        @RequestParam(required = false, defaultValue = "") String telephone,
@@ -136,7 +137,7 @@ public class CookInfoController {
         return CommonResult.success("删除成功");
     }
 
-    @GetMapping("/Cook/selectCookById")
+    @GetMapping("/cook/selectCookById")
     public CommonResult selectCookById(HttpServletRequest request) {
         HttpSession session = request.getSession();
         Integer cookId = (Integer) session.getAttribute(SessionParameters.COOKID);

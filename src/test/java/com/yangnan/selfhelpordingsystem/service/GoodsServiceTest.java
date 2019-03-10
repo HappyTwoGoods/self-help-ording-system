@@ -21,7 +21,7 @@ public class GoodsServiceTest {
     @Test
     public void insertGoodsTest() {
         GoodsDTO goodsDTO = new GoodsDTO();
-        goodsDTO.setName("孜然海瑞");
+        goodsDTO.setName("豆浆海瑞");
         goodsDTO.setDescribe("好吃不贵");
         goodsDTO.setCookId(1);
         goodsDTO.setImage("a");
