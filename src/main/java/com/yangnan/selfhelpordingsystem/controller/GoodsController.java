@@ -8,6 +8,7 @@ import com.yangnan.selfhelpordingsystem.service.GoodsService;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,12 +25,12 @@ public class GoodsController {
     private GoodsService goodsService;
 
     @GetMapping("/user/goodsList")
-    public CommonResult queryGoods(@RequestParam(required = false, defaultValue = "")String goodName,
-                                   @RequestParam(required = false, defaultValue = "")int goodType,
-                                   @RequestParam(required = false, defaultValue = "")int discount){
-        List<GoodsDTO> goodsDTOList = goodsService.searchGoods(goodName,goodType,discount);
-        if (CollectionUtils.isEmpty(goodsDTOList)){
-            return CommonResult.fail(404,"没有相关资源!");
+    public CommonResult queryGoods(@RequestParam(required = false, defaultValue = "") String goodName,
+                                   @RequestParam(required = false, defaultValue = "") int goodType,
+                                   @RequestParam(required = false, defaultValue = "") int discount) {
+        List<GoodsDTO> goodsDTOList = goodsService.searchGoods(goodName, goodType, discount);
+        if (CollectionUtils.isEmpty(goodsDTOList)) {
+            return CommonResult.fail(404, "没有相关资源!");
         }
         return CommonResult.success(goodsDTOList);
     }
@@ -104,7 +105,7 @@ public class GoodsController {
         return CommonResult.success();
     }
 
-    @GetMapping("/cook/addGoods")
+    @PostMapping("/cook/addGoods")
     public CommonResult addGoods(String goodsName, Integer type, HttpServletRequest request,
                                  BigDecimal price, Integer discount, Integer limit,
                                  String image, Integer num, String describe) {
