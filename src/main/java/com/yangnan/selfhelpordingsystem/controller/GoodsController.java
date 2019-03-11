@@ -49,6 +49,18 @@ public class GoodsController {
         return CommonResult.success(goodsDTOS);
     }
 
+    @GetMapping("/cook/select/goodsById")
+    public CommonResult selectGoodsById(Integer goodsId) {
+        if (goodsId == null || goodsId < 1) {
+            return CommonResult.fail(403, "参数错误");
+        }
+        GoodsDTO goodsDTO = goodsService.selectGoodsById(goodsId);
+        if (goodsDTO == null) {
+            return CommonResult.fail(404, "找不到资源");
+        }
+        return CommonResult.success(goodsDTO);
+    }
+
     @GetMapping("/cook/delete/goods")
     public CommonResult deleteGoods(HttpServletRequest request, Integer goodsId) {
         HttpSession session = request.getSession();
@@ -68,7 +80,7 @@ public class GoodsController {
         return CommonResult.success(200, "删除成功");
     }
 
-    @GetMapping("/cook/updateGoods")
+    @PostMapping("/cook/updateGoods")
     public CommonResult updateGoods(Integer goodsId, HttpServletRequest request,
                                     @RequestParam(required = false, defaultValue = "") String goodsName,
                                     @RequestParam(required = false, defaultValue = "") Integer type,
@@ -98,7 +110,6 @@ public class GoodsController {
         newGoods.setGoodsNum(num);
         newGoods.setDescribe(describe);
         int updateNum = goodsService.updateGoodsById(newGoods);
-        System.out.println(updateNum);
         if (updateNum < 1) {
             return CommonResult.fail(500, "服务器错误");
         }
