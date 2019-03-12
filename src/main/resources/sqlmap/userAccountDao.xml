@@ -29,7 +29,7 @@
       where id=#{id} and user_password=#{password}
      </update>
 
-    <select id="selectUserAccount" parameterType="java.lang.String">
+    <select id="selectUserAccount" parameterType="java.lang.String" resultMap="UserAccount">
         select
         <include refid="allField"/>
         from useraccount
@@ -65,7 +65,7 @@
         AND user_password = #{userPassword}
     </update>
 
-    <select id="queryBuId" parameterType="map" resultType="com.yangnan.selfhelpordingsystem.entity.UserAccountEntity">
+    <select id="queryBuId" parameterType="map" resultMap="UserAccount">
         SELECT
         <include refid="allField"/>
         FROM useraccount

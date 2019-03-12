@@ -37,11 +37,11 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public UserAccountDTO selectUserAccount(String name, String password) {
         if (Strings.isNullOrEmpty(name) || Strings.isNullOrEmpty(password)) {
-            return new UserAccountDTO();
+            return null;
         }
         UserAccountEntity userAccountEntity = userAccountDao.selectUserAccount(name, password);
         if (userAccountEntity == null) {
-            return new UserAccountDTO();
+            return null;
         }
         UserAccountDTO userAccountDTO = new UserAccountDTO();
         BeanUtils.copyProperties(userAccountEntity, userAccountDTO);

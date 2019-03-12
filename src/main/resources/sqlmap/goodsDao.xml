@@ -15,6 +15,18 @@
         <result column="add_time" property="addTime"></result>
         <result column="update_time" property="updateTime"></result>
     </resultMap>
+
+    <resultMap id="CookInfo" type="com.yangnan.selfhelpordingsystem.entity.CookEntity">
+        <result column="id" property="cookId"/>
+        <result column="cook_name" property="cookName"/>
+        <result column="telephone" property="telephone"/>
+        <result column="nickname" property="nickname"/>
+        <result column="cook_password" property="cookPassword"/>
+        <result column="cook_status" property="cookStatus"/>
+        <result column="add_time" property="addTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
     <sql id="allField">
         id,
         goods_name,
@@ -28,6 +40,24 @@
         goods_describe,
         add_time,
         update_time
+    </sql>
+
+    <sql id="GoodsCook">
+        a.id,
+        a.goods_name,
+        a.goods_type,
+        a.cook_id,
+        a.price,
+        a.discount,
+        a.goods_limit,
+        a.image,
+        a.goods_num,
+        a.goods_describe,
+        b.id,
+        b.cook_name,
+        b.telephone,
+        b.nickname,
+        b.cook_status
     </sql>
 
     <insert id="insertGoods" parameterType="map">
@@ -132,8 +162,9 @@
 
     <select id="searchGoods" parameterType="map" resultMap="Goods">
         select
-        <include refid="allField"/>
-        FROM goods
+        <include refid="GoodsCook"/>
+        FROM goods a LEFT JOIN cook b
+        ON a.cook_id = b.id
         WHERE 1=1
         <if test="goodName != null and goodName!=''">
             AND goods_name LIKE CONCAT(CONCAT('%',#{goodName}),'%')
