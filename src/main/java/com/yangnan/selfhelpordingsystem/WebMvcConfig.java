@@ -26,7 +26,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(cookInterceptor).addPathPatterns("/cook/**")
                 .excludePathPatterns("/cook/login");
         registry.addInterceptor(userInterceptor).addPathPatterns("/user/**")
-                .excludePathPatterns("/user/login");
+                .excludePathPatterns("/user/login")
+                .excludePathPatterns("/user/goodsList");
+
     }
 
     @Override

@@ -33,8 +33,8 @@ public class UserInfoController {
             return CommonResult.fail(403, "参数错误！");
         }
         UserAccountDTO userAccountDTO = userAccountService.selectUserAccount(userName, password);
-        if (userAccountDTO == null) {
-            return CommonResult.fail("登录失败！");
+        if (userAccountDTO.getId() == null) {
+            return CommonResult.fail(404,"登录失败！");
         }
         session.setAttribute(SessionParameters.USERNAME, userName);
         session.setAttribute(SessionParameters.PASSWORD, password);
@@ -61,7 +61,7 @@ public class UserInfoController {
         userAccountDTO.setPrice(price);
         int n = userAccountService.insertUserAccount(userAccountDTO);
         if (n <= 0) {
-            return CommonResult.fail("注册失败！");
+            return CommonResult.fail(500,"注册失败！");
         }
         return CommonResult.success("注册成功");
     }
@@ -76,6 +76,9 @@ public class UserInfoController {
      */
     @GetMapping("/user/add/price")
     public CommonResult addPrice(BigDecimal addPrice,String password, HttpServletRequest request){
+        if (password == null){
+            return CommonResult.fail(403,"参数错误！");
+        }
         HttpSession session = request.getSession();
         Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
         UserAccountDTO userAccountDTO = userAccountService.queryBuId(userId);
@@ -89,5 +92,19 @@ public class UserInfoController {
             return CommonResult.fail(500,"充值失败!");
         }
         return CommonResult.success();
+    }
+
+    @GetMapping("/user/query/id")
+    public CommonResult queryById(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
+        if (userId == null || userId <= 0){
+            return CommonResult.fail(403,"参数错误！");
+        }
+        UserAccountDTO userAccountDTO = userAccountService.queryBuId(userId);
+        if (userAccountDTO == null){
+            return CommonResult.fail(404,"没有该用户信息");
+        }
+        return CommonResult.success(userAccountDTO);
     }
 }
