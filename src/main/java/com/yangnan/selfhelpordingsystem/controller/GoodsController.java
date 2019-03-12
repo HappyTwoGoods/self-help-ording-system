@@ -61,7 +61,7 @@ public class GoodsController {
         return CommonResult.success(goodsDTO);
     }
 
-    @GetMapping("/cook/delete/goods")
+    @PostMapping("/cook/delete/goods")
     public CommonResult deleteGoods(HttpServletRequest request, Integer goodsId) {
         HttpSession session = request.getSession();
         Integer cookId = (Integer) session.getAttribute(SessionParameters.COOKID);
@@ -69,7 +69,6 @@ public class GoodsController {
             return CommonResult.fail(403, "参数错误");
         }
         GoodsDTO goodsDTO = goodsService.selectGoodsById(goodsId);
-        System.out.println(goodsDTO);
         if (goodsDTO == null || (!goodsDTO.getCookId().equals(cookId))) {
             return CommonResult.fail(403, "菜id与厨师id不匹配");
         }
