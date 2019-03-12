@@ -8,6 +8,7 @@ import com.yangnan.selfhelpordingsystem.service.GoodsService;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,14 +25,23 @@ public class GoodsController {
     private GoodsService goodsService;
 
     @GetMapping("/user/goodsList")
-    public CommonResult queryGoods(
-            @RequestParam(required = false, defaultValue = "")String goodName,
-                                   @RequestParam(required = false, defaultValue = "0")int goodType,
-                                   @RequestParam(required = false, defaultValue = "0")int discount
-    ){
-        List<GoodsDTO> goodsDTOList = goodsService.searchGoods(goodName,goodType,discount);
-        if (CollectionUtils.isEmpty(goodsDTOList)){
-            return CommonResult.fail(404,"没有相关资源!");
+    public CommonResult queryGoods(@RequestParam(required = false, defaultValue = "") String goodName,
+                                   @RequestParam(required = false, defaultValue = "") int goodType,
+                                   @RequestParam(required = false, defaultValue = "") int discount) {
+        List<GoodsDTO> goodsDTOList = goodsService.searchGoods(goodName, goodType, discount);
+        if (CollectionUtils.isEmpty(goodsDTOList)) {
+            return CommonResult.fail(404, "没有相关资源!");
+        }
+        return CommonResult.success(goodsDTOList);
+    }
+
+    @GetMapping("/manager/goodsList")
+    public CommonResult selectGoods(@RequestParam(required = false, defaultValue = "") String goodName,
+                                    @RequestParam(required = false, defaultValue = "") Integer goodType,
+                                    @RequestParam(required = false, defaultValue = "") Integer discount) {
+        List<GoodsDTO> goodsDTOList = goodsService.searchGoods(goodName, goodType, discount);
+        if (CollectionUtils.isEmpty(goodsDTOList)) {
+            return CommonResult.fail(404, "没有相关资源!");
         }
         return CommonResult.success(goodsDTOList);
     }
@@ -50,7 +60,19 @@ public class GoodsController {
         return CommonResult.success(goodsDTOS);
     }
 
-    @GetMapping("/cook/delete/goods")
+    @GetMapping("/cook/select/goodsById")
+    public CommonResult selectGoodsById(Integer goodsId) {
+        if (goodsId == null || goodsId < 1) {
+            return CommonResult.fail(403, "参数错误");
+        }
+        GoodsDTO goodsDTO = goodsService.selectGoodsById(goodsId);
+        if (goodsDTO == null) {
+            return CommonResult.fail(404, "找不到资源");
+        }
+        return CommonResult.success(goodsDTO);
+    }
+
+    @PostMapping("/cook/delete/goods")
     public CommonResult deleteGoods(HttpServletRequest request, Integer goodsId) {
         HttpSession session = request.getSession();
         Integer cookId = (Integer) session.getAttribute(SessionParameters.COOKID);
@@ -58,7 +80,6 @@ public class GoodsController {
             return CommonResult.fail(403, "参数错误");
         }
         GoodsDTO goodsDTO = goodsService.selectGoodsById(goodsId);
-        System.out.println(goodsDTO);
         if (goodsDTO == null || (!goodsDTO.getCookId().equals(cookId))) {
             return CommonResult.fail(403, "菜id与厨师id不匹配");
         }
@@ -69,7 +90,7 @@ public class GoodsController {
         return CommonResult.success(200, "删除成功");
     }
 
-    @GetMapping("/cook/updateGoods")
+    @PostMapping("/cook/updateGoods")
     public CommonResult updateGoods(Integer goodsId, HttpServletRequest request,
                                     @RequestParam(required = false, defaultValue = "") String goodsName,
                                     @RequestParam(required = false, defaultValue = "") Integer type,
@@ -99,14 +120,13 @@ public class GoodsController {
         newGoods.setGoodsNum(num);
         newGoods.setDescribe(describe);
         int updateNum = goodsService.updateGoodsById(newGoods);
-        System.out.println(updateNum);
         if (updateNum < 1) {
             return CommonResult.fail(500, "服务器错误");
         }
         return CommonResult.success();
     }
 
-    @GetMapping("/cook/addGoods")
+    @PostMapping("/cook/addGoods")
     public CommonResult addGoods(String goodsName, Integer type, HttpServletRequest request,
                                  BigDecimal price, Integer discount, Integer limit,
                                  String image, Integer num, String describe) {

@@ -59,7 +59,7 @@
                 nickname = #{cookInfo.nickname},
             </if>
             <if test="cookInfo.cookPassword != null and cookInfo.cookPassword != ''">
-                cook_password = #{cookInfo.cookPassword}
+                cook_password = #{cookInfo.cookPassword},
             </if>
             update_time = NOW()
         </set>

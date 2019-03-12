@@ -160,13 +160,13 @@
         where id=#{id}
     </select>
 
-    <select id="searchGoods" parameterType="int" resultMap="Goods">
+    <select id="searchGoods" parameterType="map" resultMap="Goods">
         select
         <include refid="GoodsCook"/>
         FROM goods a LEFT JOIN cook b
         ON a.cook_id = b.id
         WHERE 1=1
-        <if test="goodName != null">
+        <if test="goodName != null and goodName!=''">
             AND goods_name LIKE CONCAT(CONCAT('%',#{goodName}),'%')
         </if>
         <if test="goodType != null">

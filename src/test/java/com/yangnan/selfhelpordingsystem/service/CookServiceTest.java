@@ -19,9 +19,11 @@ public class CookServiceTest {
     @Test
     public void addTest() {
         CookDTO cookDTO = new CookDTO();
-        cookDTO.setCookName("张三");
+        cookDTO.setCookName("xiaoming");
         cookDTO.setTelephone("15991183775");
         cookDTO.setCookStatus(0);
+        cookDTO.setNickname("admin");
+        cookDTO.setCookPassword("password");
         int n = cookService.addCookerInfo(cookDTO);
         System.out.println(n);
     }
