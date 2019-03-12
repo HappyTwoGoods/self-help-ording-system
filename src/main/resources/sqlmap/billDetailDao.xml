@@ -42,7 +42,7 @@
         from bill_detail
         where
         <if test="status!=null">
-           bill_detail_status=#{status} and
+            bill_detail_status=#{status} and
         </if>
         goods_id in
         <foreach collection="goodsIds" item="goodId" separator="," open="(" close=")">
@@ -69,7 +69,10 @@
         select
         <include refid="allField"/>
         from bill_detail
-        where bill_detail_status=#{status}
+        where 1=1
+        <if test="status!=null">
+         and bill_detail_status=#{status}
+        </if>
         order by update_time asc
     </select>
 

@@ -36,10 +36,10 @@ public class GoodsController {
     }
 
     @GetMapping("/manager/goodsList")
-    public CommonResult selectGoods(@RequestParam(required = false, defaultValue = "") String goodName,
-                                    @RequestParam(required = false, defaultValue = "") Integer goodType,
+    public CommonResult selectGoods(@RequestParam(required = false, defaultValue = "") String goodsName,
+                                    @RequestParam(required = false, defaultValue = "") Integer goodsType,
                                     @RequestParam(required = false, defaultValue = "") Integer discount) {
-        List<GoodsDTO> goodsDTOList = goodsService.searchGoods(goodName, goodType, discount);
+        List<GoodsDTO> goodsDTOList = goodsService.searchGoods(goodsName, goodsType, discount);
         if (CollectionUtils.isEmpty(goodsDTOList)) {
             return CommonResult.fail(404, "没有相关资源!");
         }

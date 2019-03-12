@@ -47,7 +47,7 @@ public interface BillDetailDao {
      * @param status
      * @return
      */
-    List<BillDetailEntity> selectDetailByStatus(@Param("status") int status);
+    List<BillDetailEntity> selectDetailByStatus(@Param("status") Integer status);
 
     /**
      * 用户根据状态查看订单

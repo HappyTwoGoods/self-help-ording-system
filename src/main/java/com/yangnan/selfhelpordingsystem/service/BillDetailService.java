@@ -45,7 +45,7 @@ public interface BillDetailService {
      * @param status
      * @return
      */
-    List<BillDetailDTO> selectDetailByStatus(int status);
+    List<BillDetailDTO> selectDetailByStatus(Integer status);
 
     /**
      * 用户根据状态查看订单

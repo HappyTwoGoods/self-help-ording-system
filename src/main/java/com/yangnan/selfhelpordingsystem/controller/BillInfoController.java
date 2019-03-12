@@ -61,11 +61,8 @@ public class BillInfoController {
         return CommonResult.success(createBillDetail(billDetailDTOS));
     }
 
-    @GetMapping("manager/select/billDetail")
-    public CommonResult selectBillDetail(Integer status) {
-        if (status == null || status < BillDetailStatus.CANCEL || status > BillDetailStatus.PRODUCED) {
-            return CommonResult.fail(403, "参数错误");
-        }
+    @GetMapping("/manager/select/billDetail")
+    public CommonResult selectBillDetail(@RequestParam(required = false,defaultValue = "") Integer status) {
         List<BillDetailDTO> billDetailDTOS = billDetailService.selectDetailByStatus(status);
         if (CollectionUtils.isEmpty(billDetailDTOS)) {
             return CommonResult.fail(404, "找不到资源");
