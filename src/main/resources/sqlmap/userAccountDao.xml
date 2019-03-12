@@ -14,7 +14,7 @@
         user_name,
         user_password,
         price,
-        add_tiem,
+        add_time,
         update_time
     </sql>
     <update id="addPrice" parameterType="map">

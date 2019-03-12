@@ -35,6 +35,17 @@ public class GoodsController {
         return CommonResult.success(goodsDTOList);
     }
 
+    @GetMapping("/manager/goodsList")
+    public CommonResult selectGoods(@RequestParam(required = false, defaultValue = "") String goodName,
+                                    @RequestParam(required = false, defaultValue = "") Integer goodType,
+                                    @RequestParam(required = false, defaultValue = "") Integer discount) {
+        List<GoodsDTO> goodsDTOList = goodsService.searchGoods(goodName, goodType, discount);
+        if (CollectionUtils.isEmpty(goodsDTOList)) {
+            return CommonResult.fail(404, "没有相关资源!");
+        }
+        return CommonResult.success(goodsDTOList);
+    }
+
     @GetMapping("/cook/select/goods")
     public CommonResult queryGoods(HttpServletRequest request) {
         HttpSession session = request.getSession();
