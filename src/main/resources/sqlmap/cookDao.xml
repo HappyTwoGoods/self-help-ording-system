@@ -73,7 +73,7 @@
         WHERE
         1=1
         <if test="cookName != null and cookName!=''">
-            AND cook_name = #{cookName}
+            AND cook_name like '%${cookName}%'
         </if>
         <if test="telephone != null and telephone!=''">
             AND telephone = #{telephone}

@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 public class DeskDTO implements Serializable {
-
+    private static final long serialVersionUID = 2601589488967972755L;
     private Integer id;
 
     private String deskNum;

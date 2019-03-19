@@ -8,6 +8,7 @@ import java.util.Date;
 @Data
 public class CookDTO implements Serializable {
 
+    private static final long serialVersionUID = 9014072451710733916L;
     private Integer id;
     private String cookName;
     private String telephone;

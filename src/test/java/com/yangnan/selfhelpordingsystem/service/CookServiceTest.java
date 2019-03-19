@@ -23,7 +23,7 @@ public class CookServiceTest {
         cookDTO.setTelephone("15991183775");
         cookDTO.setCookStatus(0);
         cookDTO.setNickname("admin");
-        cookDTO.setCookPassword("password");
+        cookDTO.setCookPassword("pasword");
         int n = cookService.addCookerInfo(cookDTO);
         System.out.println(n);
     }
