@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Random;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -18,14 +19,16 @@ public class CookServiceTest {
 
     @Test
     public void addTest() {
-        CookDTO cookDTO = new CookDTO();
-        cookDTO.setCookName("xiaoming");
-        cookDTO.setTelephone("15991183775");
-        cookDTO.setCookStatus(0);
-        cookDTO.setNickname("admin");
-        cookDTO.setCookPassword("pasword");
-        int n = cookService.addCookerInfo(cookDTO);
-        System.out.println(n);
+        Random random = new Random();
+        for (int i = 0; i < 10; i++) {
+            CookDTO cookDTO = new CookDTO();
+            cookDTO.setCookName("100" + random.nextInt(100));
+            cookDTO.setTelephone("15991183" + random.nextInt(1000));
+            cookDTO.setCookStatus(0);
+            cookDTO.setNickname("admin" + random.nextInt(100));
+            cookDTO.setCookPassword("pasword" + random.nextInt(100));
+            cookService.addCookerInfo(cookDTO);
+        }
     }
 
     @Test
