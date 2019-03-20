@@ -5,6 +5,7 @@ import com.yangnan.selfhelpordingsystem.constant.GoodsType;
 import com.yangnan.selfhelpordingsystem.constant.SessionParameters;
 import com.yangnan.selfhelpordingsystem.dto.GoodsDTO;
 import com.yangnan.selfhelpordingsystem.service.GoodsService;
+import com.yangnan.selfhelpordingsystem.util.CreateBean;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -109,17 +110,10 @@ public class GoodsController {
         if (goodsDTO == null || !goodsDTO.getCookId().equals(cookId)) {
             return CommonResult.fail(403, "数据不匹配,无法修改");
         }
-        GoodsDTO newGoods = new GoodsDTO();
-        newGoods.setId(goodsId);
-        newGoods.setName(goodsName);
-        newGoods.setType(type);
-        newGoods.setPrice(price);
-        newGoods.setDiscount(discount);
-        newGoods.setLimit(limit);
-        newGoods.setImage(image);
-        newGoods.setGoodsNum(num);
-        newGoods.setDescribe(describe);
-        int updateNum = goodsService.updateGoodsById(newGoods);
+
+        GoodsDTO goods = CreateBean.createGoods(goodsName, type, price, discount, limit, image, num, describe);
+        goods.setId(goodsId);
+        int updateNum = goodsService.updateGoodsById(goods);
         if (updateNum < 1) {
             return CommonResult.fail(500, "服务器错误");
         }
@@ -143,17 +137,9 @@ public class GoodsController {
                 StringUtils.isEmpty(describe)) {
             return CommonResult.fail(403, "参数错误");
         }
-        GoodsDTO goodsDTO = new GoodsDTO();
-        goodsDTO.setName(goodsName);
-        goodsDTO.setType(type);
-        goodsDTO.setCookId(cookId);
-        goodsDTO.setPrice(price);
-        goodsDTO.setDiscount(discount);
-        goodsDTO.setLimit(limit);
-        goodsDTO.setImage(image);
-        goodsDTO.setGoodsNum(num);
-        goodsDTO.setDescribe(describe);
-        int addNum = goodsService.insertGoods(goodsDTO);
+        GoodsDTO goods = CreateBean.createGoods(goodsName, type, price, discount, limit, image, num, describe);
+        goods.setCookId(cookId);
+        int addNum = goodsService.insertGoods(goods);
         if (addNum < 1) {
             return CommonResult.fail(500, "服务器异常，新增菜失败");
         }

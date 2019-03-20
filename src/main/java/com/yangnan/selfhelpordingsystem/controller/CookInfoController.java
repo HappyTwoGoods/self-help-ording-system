@@ -10,8 +10,8 @@ import com.yangnan.selfhelpordingsystem.dto.GoodsDTO;
 import com.yangnan.selfhelpordingsystem.service.BillDetailService;
 import com.yangnan.selfhelpordingsystem.service.CookService;
 import com.yangnan.selfhelpordingsystem.service.GoodsService;
+import com.yangnan.selfhelpordingsystem.util.CreateBean;
 import org.apache.logging.log4j.util.Strings;
-import org.checkerframework.checker.propkey.qual.PropertyKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -63,7 +63,7 @@ public class CookInfoController {
      * @param telephone
      * @return
      */
-    @PostMapping ("/cook/update/cookInfo")
+    @PostMapping("/cook/update/cookInfo")
     public CommonResult updateCookInfo(HttpServletRequest request,
                                        @RequestParam(required = false, defaultValue = "") String cookName,
                                        @RequestParam(required = false, defaultValue = "") String telephone,
@@ -74,13 +74,9 @@ public class CookInfoController {
         if (cookId == null) {
             return CommonResult.fail(403, "参数错误");
         }
-        CookDTO cookDTO = new CookDTO();
-        cookDTO.setCookName(cookName);
-        cookDTO.setTelephone(telephone);
-        cookDTO.setNickname(nickname);
-        cookDTO.setCookPassword(cookPassword);
-        cookDTO.setId(cookId);
-        int result = cookService.updateCookInfo(cookDTO);
+        CookDTO cook = CreateBean.createCook(cookName, telephone, nickname, cookPassword);
+        cook.setId(cookId);
+        int result = cookService.updateCookInfo(cook);
         if (result <= 0) {
             return CommonResult.fail("修改信息失败");
         }
@@ -104,12 +100,8 @@ public class CookInfoController {
         if (StringUtils.isEmpty(cookName) || StringUtils.isEmpty(telephone) || StringUtils.isEmpty(nickname) || StringUtils.isEmpty(password)) {
             return CommonResult.fail(403, "参数错误");
         }
-        CookDTO cookDTO = new CookDTO();
-        cookDTO.setCookName(cookName);
-        cookDTO.setTelephone(telephone);
-        cookDTO.setNickname(nickname);
-        cookDTO.setCookPassword(password);
-        int result = cookService.addCookerInfo(cookDTO);
+        CookDTO cook = CreateBean.createCook(cookName, telephone, nickname, password);
+        int result = cookService.addCookerInfo(cook);
         if (result <= 0) {
             return CommonResult.fail("添加失败");
         }

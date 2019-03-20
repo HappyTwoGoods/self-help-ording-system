@@ -17,7 +17,8 @@
         update_time
     </sql>
 
-    <insert id="insertDesk" parameterType="com.yangnan.selfhelpordingsystem.entity.DeskEntity" useGeneratedKeys="true" keyProperty="desk.id">
+    <insert id="insertDesk" parameterType="com.yangnan.selfhelpordingsystem.entity.DeskEntity" useGeneratedKeys="true"
+            keyProperty="desk.id">
         INSERT INTO
         desk
         (num, desk_describe, add_time, update_time)
@@ -28,14 +29,17 @@
         NOW()
         )
     </insert>
-    
+
     <select id="queryDeskInfo" parameterType="map" resultMap="DeskInfo">
         SELECT
         <include refid="AllDeskInfo"/>
         FROM desk
         WHERE 1=1
-        <if test="num != null">
+        <if test="num != null and num != ''">
             AND num = #{num}
+        </if>
+        <if test="id != null">
+            AND id = #{id}
         </if>
     </select>
 
@@ -52,7 +56,7 @@
         </set>
         WHERE id = #{deskId}
     </update>
-    
+
     <delete id="deleteById" parameterType="java.lang.Integer">
         DELETE FROM
         desk

@@ -31,8 +31,8 @@ public class DeskServiceImpl implements DeskService {
     }
 
     @Override
-    public List<DeskDTO> queryDeskInfo(String num) {
-        List<DeskEntity> deskEntityList = deskDao.queryDeskInfo(num);
+    public List<DeskDTO> queryDeskInfo(String num, Integer id) {
+        List<DeskEntity> deskEntityList = deskDao.queryDeskInfo(num, id);
         if (CollectionUtils.isEmpty(deskEntityList)) {
             return Collections.emptyList();
         }
@@ -40,11 +40,11 @@ public class DeskServiceImpl implements DeskService {
     }
 
     @Override
-    public int updateDeskInfo(String num, String deskDescribe,Integer deskId) {
+    public int updateDeskInfo(String num, String deskDescribe, Integer deskId) {
         if (num == null && deskDescribe == null) {
             return 0;
         }
-        return deskDao.updateDeskInfo(num, deskDescribe,deskId);
+        return deskDao.updateDeskInfo(num, deskDescribe, deskId);
     }
 
     @Override
