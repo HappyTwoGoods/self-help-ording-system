@@ -129,14 +129,14 @@ public class GoodsController {
 
     @PostMapping("/cook/updateGoodsImage")
     public CommonResult updateGoodsImage(MultipartFile photo, Integer goodsId, HttpServletRequest request) {
+        if (Objects.isNull(photo) || photo.isEmpty() || goodsId == null || goodsId < 1) {
+            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
         HttpSession session = request.getSession();
         Integer cookId = (Integer) session.getAttribute(SessionParameters.COOKID);
         GoodsDTO goodsDTO = goodsService.selectGoodsById(goodsId);
         if (goodsDTO == null || !goodsDTO.getCookId().equals(cookId)) {
             return CommonResult.fail(403, "数据不匹配,无法修改");
-        }
-        if (Objects.isNull(photo) || photo.isEmpty() || goodsId == null || goodsId < 1) {
-            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
         }
         String image = fileUtil(photo);
         if (image.equals("err")) {
