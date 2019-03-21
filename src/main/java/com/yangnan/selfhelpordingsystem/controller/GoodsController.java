@@ -107,7 +107,6 @@ public class GoodsController {
                                     @RequestParam(required = false, defaultValue = "") BigDecimal price,
                                     @RequestParam(required = false, defaultValue = "") Integer discount,
                                     @RequestParam(required = false, defaultValue = "") Integer limit,
-                                    @RequestParam(required = false,defaultValue = "null") MultipartFile photo,
                                     @RequestParam(required = false, defaultValue = "") Integer num,
                                     @RequestParam(required = false, defaultValue = "") String describe) {
         HttpSession session = request.getSession();
@@ -119,17 +118,38 @@ public class GoodsController {
         if (goodsDTO == null || !goodsDTO.getCookId().equals(cookId)) {
             return CommonResult.fail(403, "数据不匹配,无法修改");
         }
-        String image = fileUtil(photo);
-        if (image.equals("err")) {
-            return CommonResult.fail(HttpStatus.ERROR);
-        }
-        GoodsDTO goods = CreateBean.createGoods(goodsName, type, price, discount, limit, image, num, describe);
+        GoodsDTO goods = CreateBean.createGoods(goodsName, type, price, discount, limit, null, num, describe);
         goods.setId(goodsId);
         int updateNum = goodsService.updateGoodsById(goods);
         if (updateNum < 1) {
             return CommonResult.fail(500, "服务器错误");
         }
         return CommonResult.success();
+    }
+
+    @PostMapping("/cook/updateGoodsImage")
+    public CommonResult updateGoodsImage(MultipartFile photo, Integer goodsId, HttpServletRequest request) {
+        if (Objects.isNull(photo) || photo.isEmpty() || goodsId == null || goodsId < 1) {
+            return CommonResult.fail(HttpStatus.PARAMETER_ERROR);
+        }
+        HttpSession session = request.getSession();
+        Integer cookId = (Integer) session.getAttribute(SessionParameters.COOKID);
+        GoodsDTO goodsDTO = goodsService.selectGoodsById(goodsId);
+        if (goodsDTO == null || !goodsDTO.getCookId().equals(cookId)) {
+            return CommonResult.fail(403, "数据不匹配,无法修改");
+        }
+        String image = fileUtil(photo);
+        if (image.equals("err")) {
+            return CommonResult.fail(HttpStatus.ERROR);
+        }
+        GoodsDTO newGoods = new GoodsDTO();
+        newGoods.setId(goodsId);
+        newGoods.setImage(image);
+        int updateNum = goodsService.updateGoodsById(goodsDTO);
+        if (updateNum < 1) {
+            return CommonResult.fail(HttpStatus.ERROR);
+        }
+        return CommonResult.success("修改成功！");
     }
 
     @PostMapping("/cook/addGoods")
