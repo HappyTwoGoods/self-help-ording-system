@@ -4,6 +4,7 @@ import com.yangnan.selfhelpordingsystem.common.CommonResult;
 import com.yangnan.selfhelpordingsystem.constant.GoodsType;
 import com.yangnan.selfhelpordingsystem.constant.SessionParameters;
 import com.yangnan.selfhelpordingsystem.dto.GoodsDTO;
+import com.yangnan.selfhelpordingsystem.emun.HttpStatus;
 import com.yangnan.selfhelpordingsystem.service.GoodsService;
 import com.yangnan.selfhelpordingsystem.util.CreateBean;
 import org.springframework.util.CollectionUtils;
@@ -12,12 +13,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class GoodsController {
@@ -98,7 +107,7 @@ public class GoodsController {
                                     @RequestParam(required = false, defaultValue = "") BigDecimal price,
                                     @RequestParam(required = false, defaultValue = "") Integer discount,
                                     @RequestParam(required = false, defaultValue = "") Integer limit,
-                                    @RequestParam(required = false, defaultValue = "") String image,
+                                    @RequestParam(required = false,defaultValue = "null") MultipartFile photo,
                                     @RequestParam(required = false, defaultValue = "") Integer num,
                                     @RequestParam(required = false, defaultValue = "") String describe) {
         HttpSession session = request.getSession();
@@ -110,7 +119,10 @@ public class GoodsController {
         if (goodsDTO == null || !goodsDTO.getCookId().equals(cookId)) {
             return CommonResult.fail(403, "数据不匹配,无法修改");
         }
-
+        String image = fileUtil(photo);
+        if (image.equals("err")) {
+            return CommonResult.fail(HttpStatus.ERROR);
+        }
         GoodsDTO goods = CreateBean.createGoods(goodsName, type, price, discount, limit, image, num, describe);
         goods.setId(goodsId);
         int updateNum = goodsService.updateGoodsById(goods);
@@ -121,21 +133,25 @@ public class GoodsController {
     }
 
     @PostMapping("/cook/addGoods")
-    public CommonResult addGoods(String goodsName, Integer type, HttpServletRequest request,
+    public CommonResult addGoods(MultipartFile photo,
+                                 String goodsName, Integer type, HttpServletRequest request,
                                  BigDecimal price, Integer discount, Integer limit,
-                                 String image, Integer num, String describe) {
+                                 Integer num, String describe) {
         HttpSession session = request.getSession();
         Integer cookId = (Integer) session.getAttribute(SessionParameters.COOKID);
         if (StringUtils.isEmpty(goodsName) ||
                 type == null || type < GoodsType.STAPLE_FOOD || type > GoodsType.BARBECUE ||
-                cookId == null || cookId < 1 ||
                 price == null || price.compareTo(BigDecimal.valueOf(0)) < 0 ||
                 discount == null || discount < 0 || discount > 10 ||
                 limit == null || limit < 0 ||
-                StringUtils.isEmpty(image) ||
+                Objects.isNull(photo) || photo.isEmpty() ||
                 num == null || num < 0 ||
                 StringUtils.isEmpty(describe)) {
             return CommonResult.fail(403, "参数错误");
+        }
+        String image = fileUtil(photo);
+        if (image.equals("err")) {
+            return CommonResult.fail(HttpStatus.ERROR);
         }
         GoodsDTO goods = CreateBean.createGoods(goodsName, type, price, discount, limit, image, num, describe);
         goods.setCookId(cookId);
@@ -143,6 +159,29 @@ public class GoodsController {
         if (addNum < 1) {
             return CommonResult.fail(500, "服务器异常，新增菜失败");
         }
-        return CommonResult.success();
+        return CommonResult.success(goods);
+    }
+
+    private String fileUtil(MultipartFile file) {
+        if (Objects.isNull(file) || file.isEmpty()) {
+            return "";
+        }
+        String photoPath = "D:/PHOTO/";
+        String image;
+        try {
+            byte[] bytes = file.getBytes();
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS");
+            image = photoPath + sdf.format(date) + file.getOriginalFilename();
+            Path path = Paths.get(image);
+            if (!Files.isWritable(path)) {
+                Files.createDirectories(Paths.get(photoPath));
+            }
+            Files.write(path, bytes);
+            return image;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "err";
+        }
     }
 }
