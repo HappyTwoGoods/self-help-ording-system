@@ -31,8 +31,7 @@ public class BillServiceImpl implements Billservice {
         }
         BillEntity billEntity = new BillEntity();
         BeanUtils.copyProperties(billDTO, billEntity);
-        billDao.insertBill(billEntity);
-        return billEntity.getId();
+        return billDao.insertBill(billEntity);
     }
 
     @Override
@@ -82,11 +81,17 @@ public class BillServiceImpl implements Billservice {
     }
 
     @Override
-    public int queryBillId(int userId, int billState) {
-        if (userId <= 0 && billState <=0){
-            return 0;
+    public BillDTO queryBillId(Integer userId, Integer billState) {
+        if (userId == null || billState == null){
+            return null;
         }
-        return billDao.queryBillId(userId,billState);
+        BillEntity billEntity = billDao.queryBillId(userId,billState);
+        if (billEntity == null){
+            return null;
+        }
+        BillDTO billDTO = new BillDTO();
+        BeanUtils.copyProperties(billEntity,billDTO);
+        return billDTO;
     }
 
     @Override

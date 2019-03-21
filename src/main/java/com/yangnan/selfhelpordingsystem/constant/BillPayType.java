@@ -4,9 +4,9 @@ public class BillPayType {
     /**
      * 线上
      */
-    public static final int ON_LINE = 1;
+    public static final Integer ON_LINE = 1;
     /**
      * 线下
      */
-    public static final int UNDER_LINE = 0;
+    public static final Integer UNDER_LINE = 0;
 }

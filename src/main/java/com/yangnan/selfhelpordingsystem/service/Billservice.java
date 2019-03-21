@@ -54,7 +54,7 @@ public interface Billservice {
      * @param billState
      * @return
      */
-    int queryBillId(int userId, int billState);
+    BillDTO queryBillId(Integer userId, Integer billState);
 
     /**
      * 根据Id修改价格

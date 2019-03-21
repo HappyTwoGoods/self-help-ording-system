@@ -57,8 +57,8 @@ public interface BillDao {
      * @param billState
      * @return
      */
-    int queryBillId(@Param("userId") int userId,
-                    @Param("billState") int billState);
+    BillEntity queryBillId(@Param("userId") Integer userId,
+                    @Param("billState") Integer billState);
 
     /**
      * 根据Id修改价格

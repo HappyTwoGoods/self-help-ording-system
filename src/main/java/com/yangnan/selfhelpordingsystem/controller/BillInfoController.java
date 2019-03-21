@@ -1,5 +1,7 @@
 package com.yangnan.selfhelpordingsystem.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.yangnan.selfhelpordingsystem.common.CommonResult;
 import com.yangnan.selfhelpordingsystem.constant.BillDetailStatus;
 import com.yangnan.selfhelpordingsystem.constant.BillStatus;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.awt.color.ICC_Profile;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -101,84 +104,101 @@ public class BillInfoController {
     /**
      * 用户下单
      *
-     * @param billDetails
+     * @param billDetail
      * @return
      */
     @GetMapping("/user/getOrder")
-    public CommonResult getOrder(HttpServletRequest request, BillDetail... billDetails) {
-        HttpSession session = request.getSession();
-        if (billDetails.length <= 0) {
+    public CommonResult getOrder(HttpServletRequest request, String billDetail) {
+        System.out.println(billDetail);
+        if (billDetail == null) {
             return CommonResult.fail(403, "参数错误！");
         }
-        BillDTO billDTO = new BillDTO();
+        JSONObject jsonObject = JSON.parseObject(billDetail);
+        Integer goodsId = jsonObject.getInteger("goodsId");
+        Integer num = jsonObject.getInteger("num");
+        BigDecimal price = jsonObject.getBigDecimal("price");
+        HttpSession session = request.getSession();
         Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
-        BigDecimal priceSum = new BigDecimal(0.00);
-        for (BillDetail billDetail : billDetails) {
-            BigDecimal price = billDetail.getPrice();
-            int mun = billDetail.getNum();
-            priceSum = priceSum.add(price.multiply(BigDecimal.valueOf(mun)));
+        BillDTO billDTO = billservice.queryBillId(userId,BillStatus.CONFIRM);
+        if (billDTO == null){
+            BillDTO newBillDTO = new BillDTO();
+            newBillDTO.setPrice(price.multiply((BigDecimal.valueOf(num))));
+            newBillDTO.setStatus(BillStatus.CONFIRM);
+            newBillDTO.setUserId(userId);
+            newBillDTO.setPayType(0);
+            int billId = billservice.insertBill(newBillDTO);
+            if (billId <= 0){
+                return CommonResult.fail(500,"添加订单失败！");
+            }
+            BillDetailDTO billDetailDTO = new BillDetailDTO();
+            billDetailDTO.setGoodsId(goodsId);
+            billDetailDTO.setNum(num);
+            billDetailDTO.setPrice(price.multiply(BigDecimal.valueOf(num)));
+            billDetailDTO.setBillId(billId);
+            billDetailDTO.setStatus(BillDetailStatus.CONCONFIRM);
+            int result = billDetailService.addBillDetail(billDetailDTO);
+            if (result <= 0) {
+                return CommonResult.fail(500,"添加菜品失败！");
+            }
+            return CommonResult.success();
         }
-        billDTO.setPrice(priceSum);
-        billDTO.setStatus(BillStatus.CONFIRM);
-        billDTO.setUserId(userId);
-        int billId = billservice.insertBill(billDTO);
-        if (billId >= 0) {
-            return CommonResult.fail(500, "添加订单失败！");
+        BigDecimal addPrice = billDTO.getPrice();
+        BillDTO billDTOAddPrice = billservice.updatePrice(addPrice.add(price),billDTO.getId(),billDTO.getStatus());
+        if (billDTOAddPrice == null) {
+            return CommonResult.fail(500,"更换订单信息失败！");
         }
         BillDetailDTO billDetailDTO = new BillDetailDTO();
-        for (BillDetail billDetail : billDetails) {
-            billDetailDTO.setGoodsId(billDetail.getGoodsId());
-            billDetailDTO.setPrice(billDetail.getPrice());
-            billDetailDTO.setNum(billDetail.getNum());
-            billDetailDTO.setStatus(BillDetailStatus.CONCONFIRM);
-            billDetailDTO.setBillId(billId);
-            int data = billDetailService.addBillDetail(billDetailDTO);
-            if (data >= 0) {
-                return CommonResult.fail(500, "添加菜品失败！");
-            }
+        billDetailDTO.setStatus(BillDetailStatus.CONCONFIRM);
+        billDetailDTO.setBillId(billDTO.getId());
+        billDetailDTO.setPrice(price.multiply(BigDecimal.valueOf(num)));
+        billDetailDTO.setNum(num);
+        billDetailDTO.setGoodsId(goodsId);
+        int result = billDetailService.addBillDetail(billDetailDTO);
+        if (result <= 0) {
+            return CommonResult.fail(500,"添加菜品失败！");
         }
         return CommonResult.success();
     }
 
-    /**
-     * 继续添加菜品
-     *
-     * @param billDetails
-     * @return
-     */
-    @GetMapping("/user/add/goods")
-    public CommonResult addGoods(HttpServletRequest request, BillDetail... billDetails) {
-        HttpSession session = request.getSession();
-        if (billDetails.length <= 0) {
-            return CommonResult.fail(403, "参数错误！");
-        }
-        Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
-        int billId = billservice.queryBillId(userId, BillStatus.CONFIRM);
-        if (billId <= 0) {
-            return CommonResult.fail(404, "没有相应的订单号！");
-        }
-        BigDecimal priceSum = new BigDecimal(0.00);
-        for (BillDetail billDetail : billDetails) {
-            BigDecimal price = billDetail.getPrice();
-            int mun = billDetail.getNum();
-            priceSum = priceSum.add(price.multiply(BigDecimal.valueOf(mun)));
-        }
-        billservice.updatePrice(priceSum, billId, BillStatus.CONFIRM);
-        BillDetailDTO billDetailDTO = new BillDetailDTO();
-        for (BillDetail billDetail : billDetails) {
-            billDetailDTO.setBillId(billId);
-            billDetailDTO.setGoodsId(billDetail.getGoodsId());
-            billDetailDTO.setPrice(billDetail.getPrice());
-            billDetailDTO.setNum(billDetail.getNum());
-            billDetailDTO.setStatus(BillDetailStatus.CONCONFIRM);
-            int data = billDetailService.addBillDetail(billDetailDTO);
-            if (data <= 0) {
-                return CommonResult.fail(500, "添加菜品失败！");
-            }
-        }
-
-        return CommonResult.success();
-    }
+//    /**
+//     * 继续添加菜品
+//     *
+//     * @param billDetails
+//     * @return
+//     */
+//    @GetMapping("/user/add/goods")
+//    public CommonResult addGoods(HttpServletRequest request, BillDetail... billDetails) {
+//        HttpSession session = request.getSession();
+//        if (billDetails.length <= 0) {
+//            return CommonResult.fail(403, "参数错误！");
+//        }
+//        Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
+//        int billId = billservice.queryBillId(userId, BillStatus.CONFIRM);
+//        if (billId <= 0) {
+//            return CommonResult.fail(404, "没有相应的订单号！");
+//        }
+//        BigDecimal priceSum = new BigDecimal(0.00);
+//        for (BillDetail billDetail : billDetails) {
+//            BigDecimal price = billDetail.getPrice();
+//            int mun = billDetail.getNum();
+//            priceSum = priceSum.add(price.multiply(BigDecimal.valueOf(mun)));
+//        }
+//        billservice.updatePrice(priceSum, billId, BillStatus.CONFIRM);
+//        BillDetailDTO billDetailDTO = new BillDetailDTO();
+//        for (BillDetail billDetail : billDetails) {
+//            billDetailDTO.setBillId(billId);
+//            billDetailDTO.setGoodsId(billDetail.getGoodsId());
+//            billDetailDTO.setPrice(billDetail.getPrice());
+//            billDetailDTO.setNum(billDetail.getNum());
+//            billDetailDTO.setStatus(BillDetailStatus.CONCONFIRM);
+//            int data = billDetailService.addBillDetail(billDetailDTO);
+//            if (data <= 0) {
+//                return CommonResult.fail(500, "添加菜品失败！");
+//            }
+//        }
+//
+//        return CommonResult.success();
+//    }
 
     /**
      * 查看用户订单详情
@@ -189,11 +209,11 @@ public class BillInfoController {
     public CommonResult queryBill(HttpServletRequest request) {
         HttpSession session = request.getSession();
         Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
-        int billId = billservice.queryBillId(userId, BillStatus.CONFIRM);
-        if (billId <= 0) {
+        BillDTO billDTO = billservice.queryBillId(userId, BillStatus.CONFIRM);
+        if (billDTO == null) {
             return CommonResult.fail(404, "没有相应的订单号！");
         }
-        List<BillDetailDTO> billDetailDTOList = billDetailService.selectDetailByBillId(billId);
+        List<BillDetailDTO> billDetailDTOList = billDetailService.selectDetailByBillId(billDTO.getId());
         return CommonResult.success(billDetailDTOList);
     }
 
@@ -208,11 +228,11 @@ public class BillInfoController {
     public CommonResult selectByStates(HttpServletRequest request, Integer states) {
         HttpSession session = request.getSession();
         Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
-        Integer billId = billservice.queryBillId(userId,BillStatus.CONFIRM);
+        BillDTO billDTO  = billservice.queryBillId(userId,BillStatus.CONFIRM);
         if (states <= 0) {
             return CommonResult.fail(403, "参数错误！");
         }
-        List<BillDetailDTO> billDetailDTOList = billDetailService.selectUserDetailByState(states,billId);
+        List<BillDetailDTO> billDetailDTOList = billDetailService.selectUserDetailByState(states,billDTO.getId());
         if (CollectionUtils.isEmpty(billDetailDTOList)) {
             return CommonResult.fail(404, "没有相关资源");
         }
@@ -229,15 +249,15 @@ public class BillInfoController {
     public CommonResult settleAccounts(String userPassword, HttpServletRequest request) {
         HttpSession session = request.getSession();
         Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
-        Integer billId = billservice.queryBillId(userId, BillStatus.CONFIRM);
-        if (billId <= 0) {
+        BillDTO billDTO = billservice.queryBillId(userId, BillStatus.CONFIRM);
+        if (billDTO == null) {
             return CommonResult.success();
         }
-        BillDTO billDTO = billservice.selectBillById(billId);
-        if (billDTO == null) {
+        BillDTO billDTOs = billservice.selectBillById(billDTO.getId());
+        if (billDTOs == null) {
             return CommonResult.fail(404, "没有相应订单信息！");
         }
-        BigDecimal price = billDTO.getPrice();
+        BigDecimal price = billDTOs.getPrice();
         UserAccountDTO userAccountDTO = userAccountService.queryBuId(userId);
         BigDecimal userPrice = userAccountDTO.getPrice();
         String myPassword = userAccountDTO.getPassword();
@@ -248,7 +268,7 @@ public class BillInfoController {
         if (data <= 0) {
             return CommonResult.fail(500, "扣除用户余额失败！");
         }
-        billservice.updatePrice(BigDecimal.ZERO, billId, BillStatus.PAYED);
+        billservice.updatePrice(BigDecimal.ZERO, billDTO.getId(), BillStatus.PAYED);
         return CommonResult.success();
     }
 
@@ -269,13 +289,13 @@ public class BillInfoController {
         if (data <= 0) {
             return CommonResult.fail(500, "取消订单失败！");
         }
-        int billId = billservice.queryBillId(userId,BillStatus.CONFIRM);
-        BillDTO billDTO = billservice.selectBillById(billId);
+        BillDTO billDTOs = billservice.queryBillId(userId,BillStatus.CONFIRM);
+        BillDTO billDTO = billservice.selectBillById(billDTOs.getId());
         BigDecimal billPrice = billDTO.getPrice();
         BillDetailDTO billDetailDTO = billDetailService.selectDetailById(billDetailId);
         BigDecimal billDetailPrice = billDetailDTO.getPrice();
         BigDecimal price = billPrice.subtract(billDetailPrice);
-        billservice.updatePrice(price,billId,BillStatus.CANCEL);
+        billservice.updatePrice(price,billDTOs.getId(),BillStatus.CANCEL);
         return CommonResult.success();
     }
 
@@ -286,6 +306,8 @@ public class BillInfoController {
     private class BillDetail {
 
         private Integer goodsId;
+
+        private String goodsName;
 
         private BigDecimal price;
 
