@@ -66,8 +66,8 @@ public interface BillDao {
      * @param billId
      * @return
      */
-    BillEntity updatePrice(@Param("price")BigDecimal price,
-                           @Param("billId") int billId,
-                           @Param("billState") int billState);
+    int updatePrice(@Param("price")BigDecimal price,
+                    @Param("billId") int billId,
+                    @Param("billState") int billState);
 }
 

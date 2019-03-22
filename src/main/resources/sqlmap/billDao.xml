@@ -47,7 +47,7 @@
         from bill
         where user_id=#{userId}
     </select>
-
+g
     <select id="selectBillByStatus" resultMap="Bill">
         select
         <include refid="allField"/>
@@ -56,7 +56,7 @@
         order by add_time asc
     </select>
 
-    <update id="updatePrice">
+    <update id="updatePrice" parameterType="map">
         UPDATE bill
         SET
         price = #{price},
@@ -66,7 +66,8 @@
     </update>
 
     <select id="queryBillId" resultMap="Bill">
-        SELECT id
+        SELECT
+        <include refid="allField"/>
         FROM bill
         WHERE user_id = #{userId}
         AND bill_status = #{billState}

@@ -52,7 +52,7 @@ public class UserInfoController {
      */
     @PostMapping("/user/register")
     public CommonResult userRegister(String userName, String password, BigDecimal price) {
-        if (userName == null && password == null && price == null) {
+        if (userName == null && password == null) {
             return CommonResult.fail(403, "参数错误！");
         }
         UserAccountDTO userAccountDTO = new UserAccountDTO();

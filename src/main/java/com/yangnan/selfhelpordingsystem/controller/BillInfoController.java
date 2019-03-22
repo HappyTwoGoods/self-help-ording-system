@@ -143,8 +143,8 @@ public class BillInfoController {
             return CommonResult.success();
         }
         BigDecimal addPrice = billDTO.getPrice();
-        BillDTO billDTOAddPrice = billservice.updatePrice(addPrice.add(price),billDTO.getId(),billDTO.getStatus());
-        if (billDTOAddPrice == null) {
+        int billDTOAddPrice = billservice.updatePrice(addPrice.add(price),billDTO.getId(),billDTO.getStatus());
+        if (billDTOAddPrice <= 0) {
             return CommonResult.fail(500,"更换订单信息失败！");
         }
         BillDetailDTO billDetailDTO = new BillDetailDTO();
@@ -159,46 +159,6 @@ public class BillInfoController {
         }
         return CommonResult.success();
     }
-
-//    /**
-//     * 继续添加菜品
-//     *
-//     * @param billDetails
-//     * @return
-//     */
-//    @GetMapping("/user/add/goods")
-//    public CommonResult addGoods(HttpServletRequest request, BillDetail... billDetails) {
-//        HttpSession session = request.getSession();
-//        if (billDetails.length <= 0) {
-//            return CommonResult.fail(403, "参数错误！");
-//        }
-//        Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
-//        int billId = billservice.queryBillId(userId, BillStatus.CONFIRM);
-//        if (billId <= 0) {
-//            return CommonResult.fail(404, "没有相应的订单号！");
-//        }
-//        BigDecimal priceSum = new BigDecimal(0.00);
-//        for (BillDetail billDetail : billDetails) {
-//            BigDecimal price = billDetail.getPrice();
-//            int mun = billDetail.getNum();
-//            priceSum = priceSum.add(price.multiply(BigDecimal.valueOf(mun)));
-//        }
-//        billservice.updatePrice(priceSum, billId, BillStatus.CONFIRM);
-//        BillDetailDTO billDetailDTO = new BillDetailDTO();
-//        for (BillDetail billDetail : billDetails) {
-//            billDetailDTO.setBillId(billId);
-//            billDetailDTO.setGoodsId(billDetail.getGoodsId());
-//            billDetailDTO.setPrice(billDetail.getPrice());
-//            billDetailDTO.setNum(billDetail.getNum());
-//            billDetailDTO.setStatus(BillDetailStatus.CONCONFIRM);
-//            int data = billDetailService.addBillDetail(billDetailDTO);
-//            if (data <= 0) {
-//                return CommonResult.fail(500, "添加菜品失败！");
-//            }
-//        }
-//
-//        return CommonResult.success();
-//    }
 
     /**
      * 查看用户订单详情
@@ -253,22 +213,30 @@ public class BillInfoController {
         if (billDTO == null) {
             return CommonResult.success();
         }
-        BillDTO billDTOs = billservice.selectBillById(billDTO.getId());
-        if (billDTOs == null) {
-            return CommonResult.fail(404, "没有相应订单信息！");
-        }
-        BigDecimal price = billDTOs.getPrice();
+        BigDecimal price = billDTO.getPrice();
         UserAccountDTO userAccountDTO = userAccountService.queryBuId(userId);
         BigDecimal userPrice = userAccountDTO.getPrice();
         String myPassword = userAccountDTO.getPassword();
         if (!myPassword.equals(userPassword)){
             return CommonResult.fail(403,"密码错误！");
         }
+        int r = userPrice.compareTo(price);
+        if (r < 0){
+            return CommonResult.fail(500,"账户余额不足，请到前台结账！");
+        }
         int data = userAccountService.updatePrice(userPrice.subtract(price), userId, userPassword);
         if (data <= 0) {
             return CommonResult.fail(500, "扣除用户余额失败！");
         }
-        billservice.updatePrice(BigDecimal.ZERO, billDTO.getId(), BillStatus.PAYED);
+        UserAccountDTO bossAccountDTO = userAccountService.queryBuId(1);
+        int bossPrice = userAccountService.updatePrice(bossAccountDTO.getPrice().add(price),bossAccountDTO.getId(),bossAccountDTO.getPassword());
+        if (bossPrice <= 0){
+            return CommonResult.fail(500,"餐厅进账失败!");
+        }
+        int result = billservice.updatePrice(null, billDTO.getId(), BillStatus.PAYED);
+        if (result <= 0) {
+            return CommonResult.fail(500,"修改结账订单失败！");
+        }
         return CommonResult.success();
     }
 
@@ -290,13 +258,31 @@ public class BillInfoController {
             return CommonResult.fail(500, "取消订单失败！");
         }
         BillDTO billDTOs = billservice.queryBillId(userId,BillStatus.CONFIRM);
-        BillDTO billDTO = billservice.selectBillById(billDTOs.getId());
-        BigDecimal billPrice = billDTO.getPrice();
+        BigDecimal billPrice = billDTOs.getPrice();
         BillDetailDTO billDetailDTO = billDetailService.selectDetailById(billDetailId);
         BigDecimal billDetailPrice = billDetailDTO.getPrice();
         BigDecimal price = billPrice.subtract(billDetailPrice);
-        billservice.updatePrice(price,billDTOs.getId(),BillStatus.CANCEL);
+        int result = billservice.updatePrice(price,billDTOs.getId(),BillStatus.CANCEL);
+        if (result <= 0) {
+            return CommonResult.fail(500,"修改订单价格失败！");
+        }
         return CommonResult.success();
+    }
+
+    /**
+     * 查看订单总价
+     *
+     * @return
+     */
+    @GetMapping("/user/queryPrice")
+    public CommonResult queryPrice(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
+        BillDTO billDTO = billservice.queryBillId(userId,BillStatus.CONFIRM);
+        if (billDTO == null){
+            return CommonResult.fail(404,"没有相关结果！");
+        }
+        return CommonResult.success(billDTO);
     }
 
     /**

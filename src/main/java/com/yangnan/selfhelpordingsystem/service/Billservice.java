@@ -64,5 +64,5 @@ public interface Billservice {
      * @param billState
      * @return
      */
-    BillDTO updatePrice(BigDecimal price,int billId, int billState);
+    int updatePrice(BigDecimal price,Integer billId, Integer billState);
 }

@@ -31,7 +31,8 @@ public class BillServiceImpl implements Billservice {
         }
         BillEntity billEntity = new BillEntity();
         BeanUtils.copyProperties(billDTO, billEntity);
-        return billDao.insertBill(billEntity);
+        billDao.insertBill(billEntity);
+        return billEntity.getId();
     }
 
     @Override
@@ -95,13 +96,10 @@ public class BillServiceImpl implements Billservice {
     }
 
     @Override
-    public BillDTO updatePrice(BigDecimal price, int billId, int billState) {
-        if (billId <= 0){
-            return null;
+    public int updatePrice(BigDecimal price, Integer billId, Integer billState) {
+        if (billId == null || billState == null){
+            return 0;
         }
-        BillEntity billEntity = billDao.updatePrice(price,billId,billState);
-        BillDTO billDTO = new BillDTO();
-        BeanUtils.copyProperties(billEntity,billDTO);
-        return billDTO;
+        return billDao.updatePrice(price,billId,billState);
     }
 }
