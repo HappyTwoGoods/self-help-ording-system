@@ -24,6 +24,7 @@ public class BillServiceTest {
         billDTO.setPayType(0);
         billDTO.setPrice(BigDecimal.valueOf(15));
         billDTO.setUserId(2);
+        billDTO.setStatus(1);
         int i = billservice.insertBill(billDTO);
         Assert.assertEquals(1, i);
     }

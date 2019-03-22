@@ -24,7 +24,7 @@
         insert into bill
         (price, user_id,pay_type,bill_status, add_time,update_time)
         values
-        (#{bill.price},#{bill.userId},#{bill.payType},1,now(),now())
+        (#{bill.price},#{bill.userId},#{bill.payType},#{bill.status},now(),now())
     </insert>
 
     <update id="updateBillStatus" parameterType="int">
@@ -65,12 +65,11 @@
         AND bill_status = #{billState}
     </update>
 
-    <select id="queryBillId" resultType="java.lang.Integer">
+    <select id="queryBillId" resultMap="Bill">
         SELECT id
         FROM bill
         WHERE user_id = #{userId}
         AND bill_status = #{billState}
     </select>
-
 
 </mapper>

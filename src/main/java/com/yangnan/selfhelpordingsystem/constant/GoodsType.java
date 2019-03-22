@@ -5,12 +5,12 @@ public class GoodsType {
     /**
      * 主食
      */
-    public static final int STAPLE_FOOD = 1;
+    public static final Integer STAPLE_FOOD = 1;
 
     /**
      * 饮品
      */
-    public static final int DRINKS = 2;
+    public static final Integer DRINKS = 2;
 
     /**
      * 汤羹
