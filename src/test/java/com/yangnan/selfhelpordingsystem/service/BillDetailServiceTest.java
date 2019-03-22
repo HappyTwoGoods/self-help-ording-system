@@ -22,7 +22,7 @@ public class BillDetailServiceTest {
 
     @Test
     public void addBillDetailServiceTest() {
-        for(int i=0;i<10;i++) {
+        for(int i=0;i<4;i++) {
             BillDetailDTO billDetailDTO = new BillDetailDTO();
             Random random = new Random();
             billDetailDTO.setBillId(random.nextInt(3)+1);

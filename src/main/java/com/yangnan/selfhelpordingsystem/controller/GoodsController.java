@@ -145,7 +145,7 @@ public class GoodsController {
         GoodsDTO newGoods = new GoodsDTO();
         newGoods.setId(goodsId);
         newGoods.setImage(image);
-        int updateNum = goodsService.updateGoodsById(goodsDTO);
+        int updateNum = goodsService.updateGoodsById(newGoods);
         if (updateNum < 1) {
             return CommonResult.fail(HttpStatus.ERROR);
         }
@@ -186,19 +186,28 @@ public class GoodsController {
         if (Objects.isNull(file) || file.isEmpty()) {
             return "";
         }
-        String photoPath = "D:/PHOTO/";
-        String image;
+        String photoPath = "E:/MyGraduate/selef-help-manger-side/static/image/";
+        String photoPathTwo = "E:/MyGraduate/ording-system-vue/static/image/";
+        String imageOne;
+        String imageTwo;
         try {
             byte[] bytes = file.getBytes();
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS");
-            image = photoPath + sdf.format(date) + file.getOriginalFilename();
-            Path path = Paths.get(image);
-            if (!Files.isWritable(path)) {
+            imageOne = photoPath + sdf.format(date) + file.getOriginalFilename();
+            imageTwo = photoPathTwo + sdf.format(date) + file.getOriginalFilename();
+            String reImage = "../../static/image/" + sdf.format(date) + file.getOriginalFilename();
+            Path pathOne = Paths.get(imageOne);
+            if (!Files.isWritable(pathOne)) {
                 Files.createDirectories(Paths.get(photoPath));
             }
-            Files.write(path, bytes);
-            return image;
+            Path pathTwo = Paths.get(imageTwo);
+            if (!Files.isWritable(pathTwo)) {
+                Files.createDirectories(Paths.get(photoPath));
+            }
+            Files.write(pathOne, bytes);
+            Files.write(pathTwo, bytes);
+            return reImage;
         } catch (IOException e) {
             e.printStackTrace();
             return "err";
