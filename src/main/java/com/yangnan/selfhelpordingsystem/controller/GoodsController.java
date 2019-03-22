@@ -186,8 +186,8 @@ public class GoodsController {
         if (Objects.isNull(file) || file.isEmpty()) {
             return "";
         }
-        String photoPath = "D:/MyGraduate/selef-help-manger-side/static/image/";
-        String photoPathTwo = "D:/MyGraduate/ording-system-vue/static/image/";
+        String photoPath = "E:/MyGraduate/selef-help-manger-side/static/image/";
+        String photoPathTwo = "E:/MyGraduate/ording-system-vue/static/image/";
         String imageOne;
         String imageTwo;
         try {
