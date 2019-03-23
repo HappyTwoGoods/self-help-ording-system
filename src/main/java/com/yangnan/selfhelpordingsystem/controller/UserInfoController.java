@@ -107,4 +107,20 @@ public class UserInfoController {
         }
         return CommonResult.success(userAccountDTO);
     }
+
+    /**
+     * 用户退出
+     *
+     * @return
+     */
+    @GetMapping("/user/logout")
+    public CommonResult userLogout(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        try {
+            session.setAttribute(SessionParameters.USERID, "");
+        }catch (Exception e){
+            return CommonResult.fail(500,"服务器异常，退出失败！");
+        }
+      return CommonResult.success();
+    }
 }

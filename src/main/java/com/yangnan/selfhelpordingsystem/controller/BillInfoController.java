@@ -261,8 +261,7 @@ public class BillInfoController {
         BigDecimal billPrice = billDTOs.getPrice();
         BillDetailDTO billDetailDTO = billDetailService.selectDetailById(billDetailId);
         BigDecimal billDetailPrice = billDetailDTO.getPrice();
-        BigDecimal price = billPrice.subtract(billDetailPrice);
-        int result = billservice.updatePrice(price,billDTOs.getId(),BillStatus.CANCEL);
+        int result = billservice.updatePrice(billPrice.subtract(billDetailPrice),billDTOs.getId(),BillStatus.CANCEL);
         if (result <= 0) {
             return CommonResult.fail(500,"修改订单价格失败！");
         }

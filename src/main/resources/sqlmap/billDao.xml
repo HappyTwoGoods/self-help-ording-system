@@ -47,7 +47,7 @@
         from bill
         where user_id=#{userId}
     </select>
-g
+
     <select id="selectBillByStatus" resultMap="Bill">
         select
         <include refid="allField"/>
@@ -72,5 +72,4 @@ g
         WHERE user_id = #{userId}
         AND bill_status = #{billState}
     </select>
-
 </mapper>
