@@ -12,6 +12,8 @@ public class BillEntity {
 
     private BigDecimal price;
 
+    private Integer deskNum;
+
     private Integer userId;
 
     private Integer payType;

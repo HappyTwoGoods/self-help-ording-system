@@ -5,6 +5,7 @@
         <result column="id" property="id"></result>
         <result column="price" property="price"></result>
         <result column="user_id" property="userId"></result>
+        <result column="desk_num" property="deskNum"></result>
         <result column="pay_type" property="payType"></result>
         <result column="bill_status" property="status"></result>
         <result column="add_time" property="addTime"></result>
@@ -14,6 +15,7 @@
         id,
         price,
         user_id,
+        desk_num,
         pay_type,
         bill_status,
         add_time,
@@ -22,9 +24,9 @@
     <insert id="insertBill" parameterType="com.yangnan.selfhelpordingsystem.entity.BillEntity"
             useGeneratedKeys="true" keyProperty="bill.id">
         insert into bill
-        (price, user_id,pay_type,bill_status, add_time,update_time)
+        (price, user_id,desk_num,pay_type,bill_status, add_time,update_time)
         values
-        (#{bill.price},#{bill.userId},#{bill.payType},#{bill.status},now(),now())
+        (#{bill.price},#{bill.userId},#{bill.deskNum},#{bill.payType},#{bill.status},now(),now())
     </insert>
 
     <update id="updateBillStatus" parameterType="int">
@@ -56,13 +58,23 @@
         order by add_time asc
     </select>
 
-    <update id="updatePrice" parameterType="map">
+    <update id="updatePrices" parameterType="map">
         UPDATE bill
         SET
         price = #{price},
         update_time = NOW()
         WHERE id = #{billId}
         AND bill_status = #{billState}
+    </update>
+
+    <update id="settleAccounts" parameterType="map">
+        UPDATE bill
+        SET
+        price = #{price },
+        pay_type = #{payType },
+        bill_status = #{billState },
+        update_time = NOW()
+        WHERE id = #{billId }
     </update>
 
     <select id="queryBillId" resultMap="Bill">

@@ -108,9 +108,8 @@ public class BillInfoController {
      * @return
      */
     @GetMapping("/user/getOrder")
-    public CommonResult getOrder(HttpServletRequest request, String billDetail) {
-        System.out.println(billDetail);
-        if (billDetail == null) {
+    public CommonResult getOrder(HttpServletRequest request, String billDetail, Integer deskNum) {
+        if (billDetail == null || deskNum == null) {
             return CommonResult.fail(403, "参数错误！");
         }
         JSONObject jsonObject = JSON.parseObject(billDetail);
@@ -126,6 +125,7 @@ public class BillInfoController {
             newBillDTO.setStatus(BillStatus.CONFIRM);
             newBillDTO.setUserId(userId);
             newBillDTO.setPayType(0);
+            newBillDTO.setDeskNum(deskNum);
             int billId = billservice.insertBill(newBillDTO);
             if (billId <= 0){
                 return CommonResult.fail(500,"添加订单失败！");
@@ -143,7 +143,7 @@ public class BillInfoController {
             return CommonResult.success();
         }
         BigDecimal addPrice = billDTO.getPrice();
-        int billDTOAddPrice = billservice.updatePrice(addPrice.add(price),billDTO.getId(),billDTO.getStatus());
+        int billDTOAddPrice = billservice.updatePrices(addPrice.add(price),billDTO.getId(),billDTO.getStatus());
         if (billDTOAddPrice <= 0) {
             return CommonResult.fail(500,"更换订单信息失败！");
         }
@@ -233,7 +233,7 @@ public class BillInfoController {
         if (bossPrice <= 0){
             return CommonResult.fail(500,"餐厅进账失败!");
         }
-        int result = billservice.updatePrice(null, billDTO.getId(), BillStatus.PAYED);
+        int result = billservice.settleAccounts(BigDecimal.ZERO,1,BillStatus.PAYED,billDTO.getId());
         if (result <= 0) {
             return CommonResult.fail(500,"修改结账订单失败！");
         }
@@ -261,7 +261,7 @@ public class BillInfoController {
         BigDecimal billPrice = billDTOs.getPrice();
         BillDetailDTO billDetailDTO = billDetailService.selectDetailById(billDetailId);
         BigDecimal billDetailPrice = billDetailDTO.getPrice();
-        int result = billservice.updatePrice(billPrice.subtract(billDetailPrice),billDTOs.getId(),BillStatus.CANCEL);
+        int result = billservice.updatePrices(billPrice.subtract(billDetailPrice),billDTOs.getId(),billDTOs.getStatus());
         if (result <= 0) {
             return CommonResult.fail(500,"修改订单价格失败！");
         }

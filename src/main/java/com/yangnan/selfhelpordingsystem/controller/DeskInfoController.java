@@ -76,4 +76,13 @@ public class DeskInfoController {
         }
         return CommonResult.success("更新成功！");
     }
+
+    @GetMapping("/user/selectAll")
+    public CommonResult selectAll(){
+        List<DeskDTO> deskDTOList = deskService.selectAll();
+        if (CollectionUtils.isEmpty(deskDTOList)) {
+            return CommonResult.fail(404,"没有餐桌信息！");
+        }
+        return CommonResult.success(deskDTOList);
+    }
 }

@@ -64,5 +64,16 @@ public interface Billservice {
      * @param billState
      * @return
      */
-    int updatePrice(BigDecimal price,Integer billId, Integer billState);
+    int updatePrices(BigDecimal price,Integer billId, Integer billState);
+
+    /**
+     * 结账
+     *
+     * @param price
+     * @param payType
+     * @param billState
+     * @param billId
+     * @return
+     */
+    int settleAccounts(BigDecimal price, Integer payType, Integer billState, Integer billId);
 }

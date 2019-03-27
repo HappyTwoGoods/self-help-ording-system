@@ -96,10 +96,18 @@ public class BillServiceImpl implements Billservice {
     }
 
     @Override
-    public int updatePrice(BigDecimal price, Integer billId, Integer billState) {
+    public int updatePrices(BigDecimal price, Integer billId, Integer billState) {
         if (billId == null || billState == null){
             return 0;
         }
-        return billDao.updatePrice(price,billId,billState);
+        return billDao.updatePrices(price,billId,billState);
+    }
+
+    @Override
+    public int settleAccounts(BigDecimal price, Integer payType, Integer billState, Integer billId) {
+        if (payType == null || billState == null || billId == null){
+            return 0;
+        }
+        return billDao.settleAccounts(price,payType,billState,billId);
     }
 }

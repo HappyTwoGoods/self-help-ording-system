@@ -54,4 +54,13 @@ public class DeskServiceImpl implements DeskService {
         }
         return deskDao.deleteById(deskId);
     }
+
+    @Override
+    public List<DeskDTO> selectAll() {
+        List<DeskEntity> deskEntityList = deskDao.selectAll();
+        if (CollectionUtils.isEmpty(deskEntityList)) {
+            return null;
+        }
+        return BeansListUtils.copyListProperties(deskEntityList,DeskDTO.class);
+    }
 }

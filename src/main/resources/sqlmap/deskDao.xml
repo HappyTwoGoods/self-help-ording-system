@@ -63,4 +63,11 @@
         WHERE
         id = #{deskId}
     </delete>
+
+    <select id="selectAll" parameterType="map" resultMap="DeskInfo">
+        SELECT
+        <include refid="AllDeskInfo"/>
+        FROM desk
+        WHERE 1=1
+    </select>
 </mapper>

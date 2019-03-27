@@ -64,10 +64,26 @@ public interface BillDao {
      * 根据Id修改价格
      *
      * @param billId
+     * @param price
+     * @param billState
      * @return
      */
-    int updatePrice(@Param("price")BigDecimal price,
+    int updatePrices(@Param("price")BigDecimal price,
                     @Param("billId") int billId,
                     @Param("billState") int billState);
+
+    /**
+     * 结账
+     *
+     * @param price
+     * @param payType
+     * @param billState
+     * @param billId
+     * @return
+     */
+    int settleAccounts(@Param("price")BigDecimal price,
+                       @Param("payType")Integer payType,
+                       @Param("billState")Integer billState,
+                       @Param("billId")Integer billId);
 }
 

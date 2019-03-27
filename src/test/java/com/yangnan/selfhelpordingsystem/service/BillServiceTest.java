@@ -52,4 +52,10 @@ public class BillServiceTest {
         List<BillDTO> billDTOS = billservice.selectBillByStatus(BillStatus.PAYED);
         Assert.assertNotNull(billDTOS);
     }
+
+    @Test
+    public void updatePrice(){
+        int result = billservice.updatePrices(BigDecimal.valueOf(22),2,1);
+        System.out.println(result);
+    }
 }

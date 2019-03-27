@@ -42,4 +42,11 @@ public interface DeskDao {
      * @return
      */
     int deleteById(@Param("deskId") Integer deskId);
+
+    /**
+     * 查看所有餐桌信息
+     *
+     * @return
+     */
+    List<DeskEntity> selectAll();
 }

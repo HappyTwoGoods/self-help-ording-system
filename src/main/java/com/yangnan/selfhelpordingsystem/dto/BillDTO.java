@@ -12,6 +12,7 @@ public class BillDTO implements Serializable {
     private Integer id;
     private BigDecimal price;
     private Integer userId;
+    private Integer deskNum;
     private Integer payType;
     private Integer status;
     private Date addTime;

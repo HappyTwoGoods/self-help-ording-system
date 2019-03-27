@@ -39,4 +39,11 @@ public interface DeskService {
      */
     int deleteById(Integer deskId);
 
+    /**
+     * 查看所有餐桌信息
+     *
+     * @return
+     */
+    List<DeskDTO> selectAll();
+
 }

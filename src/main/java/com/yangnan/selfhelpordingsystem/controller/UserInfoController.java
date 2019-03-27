@@ -123,4 +123,32 @@ public class UserInfoController {
         }
       return CommonResult.success();
     }
+
+    /**
+     * 用户更改密码
+     *
+     * @param password
+     * @param request
+     * @return
+     */
+    @GetMapping("/user/updatePassword")
+    public CommonResult updatePassword(String password, String newPassword,HttpServletRequest request){
+        if (password == null || newPassword == null) {
+            return CommonResult.fail(403,"参数错误！");
+        }
+        HttpSession session = request.getSession();
+        Integer userId = (Integer) session.getAttribute(SessionParameters.USERID);
+        UserAccountDTO userAccountDTOs = userAccountService.queryBuId(userId);
+        if (!userAccountDTOs.getPassword().equals(password)) {
+            return CommonResult.fail(500,"密码不正确，请重新输入！");
+        }
+        UserAccountDTO userAccountDTO = new UserAccountDTO();
+        userAccountDTO.setPassword(newPassword);
+        userAccountDTO.setId(userId);
+        int result = userAccountService.updateUserNameOrPassword(userAccountDTO);
+        if (result <= 0) {
+            return CommonResult.fail(500,"修改密码失败！");
+        }
+        return CommonResult.success();
+    }
 }
