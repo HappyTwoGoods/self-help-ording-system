@@ -1,6 +1,5 @@
 package com.yangnan.selfhelpordingsystem.dao;
 
-import com.yangnan.selfhelpordingsystem.dto.UserAccountDTO;
 import com.yangnan.selfhelpordingsystem.entity.UserAccountEntity;
 import org.apache.ibatis.annotations.Param;
 

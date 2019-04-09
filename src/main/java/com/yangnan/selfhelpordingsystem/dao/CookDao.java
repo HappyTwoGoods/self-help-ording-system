@@ -1,6 +1,5 @@
 package com.yangnan.selfhelpordingsystem.dao;
 
-import com.yangnan.selfhelpordingsystem.constant.CookStatus;
 import com.yangnan.selfhelpordingsystem.entity.CookEntity;
 import org.apache.ibatis.annotations.Param;
 

@@ -34,6 +34,14 @@ public class GoodsController {
     @Resource
     private GoodsService goodsService;
 
+    /**
+     * 用户查看菜品信息
+     *
+     * @param goodName
+     * @param goodType
+     * @param discount
+     * @return
+     */
     @GetMapping("/user/goodsList")
     public CommonResult queryGoods(@RequestParam(required = false, defaultValue = "") String goodName,
                                    @RequestParam(required = false, defaultValue = "") Integer goodType,
